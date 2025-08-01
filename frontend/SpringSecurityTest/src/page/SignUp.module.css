@@ -1,0 +1,40 @@
+.input{
+    width: 27em;
+    height: 3.5em;
+    display: block;
+    margin-bottom: 1em;
+}
+
+.modalInput{
+    width: 18em;
+    height: 3em;
+}
+
+.modalInput::placeholder{
+    color: gray;
+    font-weight: 400;
+    font-family: Arial
+}
+
+.input::placeholder{
+    color: gray;
+    font-weight: 400;
+    font-family: Arial
+}
+
+.button{
+    height: 3.5em;
+    background-color: #E0E7FF;
+}
+
+.button:hover{
+    background-color: #BECEFF;
+}
+
+.modalButton{
+        background-color: #E0E7FF;
+}
+
+.modalButton:hover{
+    background-color: #BECEFF;
+}

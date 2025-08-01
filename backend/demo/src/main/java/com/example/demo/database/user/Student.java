@@ -8,12 +8,21 @@ public class Student
 {
 	@Id
 	private String id;
+	private String name;
 	private String password;
 	private String role;
 	private int admissionYear;
 	private String major;
 	
-    public Student() {
+    public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Student() {
     }
 
 	public String getId() {
