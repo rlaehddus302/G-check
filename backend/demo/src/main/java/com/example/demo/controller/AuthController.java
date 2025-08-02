@@ -20,6 +20,8 @@ import com.example.demo.database.department.DepartmentRepository;
 import com.example.demo.database.user.Student;
 import com.example.demo.database.user.StudentRepository;
 
+import jakarta.validation.Valid;
+
 @RestController
 public class AuthController 
 {
@@ -30,13 +32,13 @@ public class AuthController
 	DepartmentRepository departmentRepository;
 	
 	@PostMapping("/register/checkDuplicate")
-	public ResponseEntity<String> checkDuplicate(@RequestBody Map<String, String> request)
+	public ResponseEntity<String> checkDuplicate(@RequestParam String id)
 	{
-		String id = request.get("id");
+		System.out.println(id);
 		Optional<Student> student = studentRepository.findByUserID(id);
 		if(student.isEmpty())
 		{
-			ResponseEntity.ok("사용 가능한 아이디입니다.");
+			return ResponseEntity.ok("사용 가능한 아이디입니다.");
 		}
 		return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 있는 아이디입니다.");
 	}
@@ -49,7 +51,7 @@ public class AuthController
 	}
 	
 	@PostMapping("/register")
-	public ResponseEntity<String> register(@RequestBody Student student)
+	public ResponseEntity<String> register(@RequestBody @Valid Student student)
 	{
 		if(student == null)
 		{
