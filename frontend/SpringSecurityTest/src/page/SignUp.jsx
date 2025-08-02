@@ -75,20 +75,30 @@ export default function SignUp() {
             "name" : name.current.value,
             "password" : password.current.value,
             "admissionYear" : admissionYear.current.value,
-            "major" : major,
+            "major" : major.current.value,
         }
         try {
             const response = await fetch('http://localhost:8080/register', {
                 method: 'POST',
                 credentials: 'include',
-                body : JSON.stringify(data)
+                headers : {
+                    "Content-Type": "application/json"
+                },
+                body : JSON.stringify(data),
             });
             const body = await response.json()
-        if (!response.ok) {
-            console.log(response);
-            throw new Error('로그인 실패');
-        }
-        } catch (error) {
+            if (!response.ok) 
+            {
+                console.log(response);
+                console.log(body);
+                throw new Error('등록 실패');
+            }
+            else
+            {
+
+            }
+        } catch (error) 
+        {
             console.error('에러:', error);
         }
     }
@@ -135,7 +145,7 @@ export default function SignUp() {
                         </div> 
                         }
                     </div>
-                    <button type="button" className="btn btn-secondary w-100 py-3 fs-5 fw-bold">완료</button>
+                    <button type="submit" className="btn btn-secondary w-100 py-3 fs-5 fw-bold">완료</button>
                 </form>
             </div>
             <div ref={modalRef} className="modal" tabindex="-1">

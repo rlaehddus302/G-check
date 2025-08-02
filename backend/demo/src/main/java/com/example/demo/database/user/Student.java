@@ -1,5 +1,8 @@
 package com.example.demo.database.user;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -10,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Entity
 public class Student 
@@ -18,12 +22,17 @@ public class Student
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@Column(unique = true)
+	@NotBlank(message = "빈칸 및 공백이 없어야 합니다.")
 	private String userID;
+	@NotBlank(message = "빈칸 및 공백이 없어야 합니다.")
 	private String name;
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	@NotBlank(message = "빈칸 및 공백이 없어야 합니다.")
+	@Size(min = 8, max = 20, message = "8에서 20자를 입력해야 합니다")
 	private String password;
 	private String role;
 	private int admissionYear;
+	@NotBlank(message = "빈칸 및 공백이 없어야 합니다.")
 	private String major;
 	
 	public Student() {

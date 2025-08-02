@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -19,6 +20,7 @@ import com.example.demo.database.department.Department;
 import com.example.demo.database.department.DepartmentRepository;
 import com.example.demo.database.user.Student;
 import com.example.demo.database.user.StudentRepository;
+import com.example.demo.error.InvalidYearException;
 
 import jakarta.validation.Valid;
 
@@ -53,9 +55,10 @@ public class AuthController
 	@PostMapping("/register")
 	public ResponseEntity<String> register(@RequestBody @Valid Student student)
 	{
-		if(student == null)
+		int admissionYear = student.getAdmissionYear();
+		if( admissionYear > LocalDate.now().getYear() || admissionYear < 2020)
 		{
-			ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+			throw new InvalidYearException("지원하지 않는 년도입니다.");
 		}
 		student.setRole("ROLE_USER");
 		studentRepository.save(student);
