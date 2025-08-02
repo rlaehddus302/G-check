@@ -1,14 +1,28 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import classes from './SignUp.module.css'
 
 export default function SignUp() {
     
+    const [mismatch, setMismatch] = useState(false);
     const modalRef = useRef(null)
-
+    const password = useRef(null)
+    const confirmPassword = useRef(null)
     function openModal()
     {
         const modal = new bootstrap.Modal(modalRef.current);
         modal.show();
+    }
+
+    function checkPassword()
+    {
+        if(password.current.value !== confirmPassword.current.value)
+        {
+            setMismatch(true)
+        }
+        else
+        {
+            setMismatch(false)
+        }
     }
 
     async function duplicateCheck()
@@ -47,13 +61,22 @@ export default function SignUp() {
                     </div>
                     <div className='mb-5'>
                         <p style={{fontSize:'1.1em'}} className='fw-bold mb-2' >비밀번호</p>
-                        <input className={`form-control border border-secondary-subtle p-3 rounded-3 ${classes.input}`} type="text" placeholder="아이디를 입력하세요"/>
+                        <input ref={password} className={`form-control border border-secondary-subtle p-3 rounded-3 ${classes.input}`} type="password" placeholder="아이디를 입력하세요"/>
                     </div>
                     <div className='mb-5'>
                         <p style={{fontSize:'1.1em'}} className='fw-bold mb-2' >비밀번호 확인</p>
-                        <input className={`form-control border border-secondary-subtle p-3 rounded-3 ${classes.input}`} type="text" placeholder="아이디를 입력하세요"/>
+                        <input ref={confirmPassword} onBlur={checkPassword} className={`form-control border ${mismatch ? "border-danger" : "border-secondary-subtle"} p-3 rounded-3 ${classes.input}`} type="password" placeholder="아이디를 입력하세요"/>
+                        {mismatch && 
+                        <div className='text-danger d-flex align-items-center column-gap-2'>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi bi-exclamation-circle text-danger" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
+                            </svg>
+                            비밀번호가 일치하지 않습니다.
+                        </div> 
+                        }
                     </div>
-                    <button type="button" class="btn btn-secondary w-100 py-3 fs-5 fw-bold">완료</button>
+                    <button type="button" className="btn btn-secondary w-100 py-3 fs-5 fw-bold">완료</button>
                 </form>
             </div>
             <div ref={modalRef} className="modal" tabindex="-1">
