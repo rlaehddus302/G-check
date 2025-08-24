@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 import classes from './Login.module.css'
+import { Link } from 'react-router-dom'
 export default function Login() {
 
   const id = useRef()
@@ -43,9 +44,9 @@ export default function Login() {
             <button className="w-100 btn btn-secondary p-3 fs-4">로그인하기</button>
           </form>
           <div className='d-flex align-items-center justify-content-center mt-3'>
-            <p className='text-secondary fs-6 m-0'>회원가입</p>
+            <Link className='text-decoration-none' to="/signUp"><p className='text-secondary fs-6 m-0'>회원가입</p></Link>
             <span style={{width:'0.05em', height:'2em'}} className='mx-3 bg-secondary'></span>
-            <p className='text-secondary fs-6 m-0'>비밀번호 찾기</p>
+            <p className='text-secondary fs-6 m-0'>비밀번호 찾기</p> 
           </div>
         </div>
       </section>

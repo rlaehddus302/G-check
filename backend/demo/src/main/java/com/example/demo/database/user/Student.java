@@ -28,7 +28,6 @@ public class Student
 	private String name;
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	@NotBlank(message = "빈칸 및 공백이 없어야 합니다.")
-	@Size(min = 8, max = 20, message = "8에서 20자를 입력해야 합니다")
 	private String password;
 	private String role;
 	private int admissionYear;

@@ -8,10 +8,14 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,6 +27,7 @@ import com.example.demo.database.department.DepartmentRepository;
 import com.example.demo.database.user.Student;
 import com.example.demo.database.user.StudentRepository;
 import com.example.demo.error.DuplicateIdException;
+import com.example.demo.error.IdBlankException;
 import com.example.demo.error.InvalidYearException;
 
 import jakarta.validation.Valid;
@@ -41,6 +46,10 @@ public class AuthController
 	@PostMapping("/register/checkDuplicate")
 	public ResponseEntity<Map<String, String>> checkDuplicate(@RequestParam String id)
 	{
+		if(id.trim().isEmpty())
+		{
+		    throw new IdBlankException("공백이나 빈칸은 아이디가 될 수 없습니다.");
+		}
 		Optional<Student> student = studentRepository.findByUserID(id);
 		if(!student.isEmpty())
 		{

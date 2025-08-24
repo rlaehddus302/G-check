@@ -16,6 +16,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.example.demo.dto.AuthErrorDTO;
 import com.example.demo.error.DuplicateIdException;
+import com.example.demo.error.IdBlankException;
 import com.example.demo.error.InvalidYearException;
 
 @ControllerAdvice
@@ -30,6 +31,13 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler
 	
 	@ExceptionHandler(exception = DuplicateIdException.class)
 	public ResponseEntity<AuthErrorDTO> duplicateId(Exception ex, WebRequest request)
+	{
+		AuthErrorDTO errorDTO = new AuthErrorDTO(LocalDate.now(),ex.getMessage(), "userID");
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDTO);
+	}
+	
+	@ExceptionHandler(exception = IdBlankException.class)
+	public ResponseEntity<AuthErrorDTO> IdBlank(Exception ex, WebRequest request)
 	{
 		AuthErrorDTO errorDTO = new AuthErrorDTO(LocalDate.now(),ex.getMessage(), "userID");
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDTO);
