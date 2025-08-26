@@ -1,8 +1,14 @@
+import { useNavigate } from 'react-router-dom'
 import classes from './MainPage.module.css'
 
 
 export default function MainPage()
 {
+    const navigate = useNavigate()
+    function navigationHandler(link)
+    {
+        navigate("/" + link)
+    }
     return(
         <div className="flex-grow-1">
             <div className='d-flex justify-content-center align-items-center h-100'>
@@ -17,10 +23,10 @@ export default function MainPage()
                     <p className='text-black-50 fs-5 mb-5'>대학교 졸업 요건부터 학점 관리까지, 모든 것을 한 곳에서 간편하게 관리하세요</p>
                     <div className="d-md-flex align-items-center justify-content-center gap-3 xl">
                         <div className='mb-3 mb-md-0'>
-                            <button type="button" style={{"--bs-btn-bg": "#AD46FF","--bs-btn-border-color": "#AD46FF","--bs-btn-hover-bg": "#922fe0","--bs-btn-hover-border-color": "#922fe0", "--bs-btn-active-bg" : "#922fe0", "--bs-btn-active-border-color" : "#922fe0"}} className="btn btn-success fw-bolder px-3f">지금 시작하기</button>
+                            <button onClick={() => navigationHandler("signUp")} type="button" style={{"--bs-btn-bg": "#AD46FF","--bs-btn-border-color": "#AD46FF","--bs-btn-hover-bg": "#922fe0","--bs-btn-hover-border-color": "#922fe0", "--bs-btn-active-bg" : "#922fe0", "--bs-btn-active-border-color" : "#922fe0"}} className="btn btn-success fw-bolder px-3f">지금 시작하기</button>
                         </div>
                         <div>
-                            <button type="button" style={{"--bs-btn-border-color": "#e5e5e5","--bs-btn-hover-border-color": "#e5e5e5"}} className="btn btn-light fw-bolder px-3">로그인하기</button>
+                            <button onClick={() => navigationHandler("login")} type="button" style={{"--bs-btn-border-color": "#e5e5e5","--bs-btn-hover-border-color": "#e5e5e5"}} className="btn btn-light fw-bolder px-3">로그인하기</button>
                         </div>
                     </div>
                 </center>
