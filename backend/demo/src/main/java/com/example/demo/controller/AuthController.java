@@ -1,17 +1,32 @@
 package com.example.demo.controller;
 
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
@@ -26,10 +41,14 @@ import com.example.demo.database.department.Department;
 import com.example.demo.database.department.DepartmentRepository;
 import com.example.demo.database.user.Student;
 import com.example.demo.database.user.StudentRepository;
+import com.example.demo.dto.LoginRequest;
 import com.example.demo.error.DuplicateIdException;
 import com.example.demo.error.IdBlankException;
 import com.example.demo.error.InvalidYearException;
 
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 @RestController
@@ -42,6 +61,40 @@ public class AuthController
 	DepartmentRepository departmentRepository;
 	@Autowired
 	PasswordEncoder passwordEncoder;
+	@Autowired
+	AuthenticationManager authenticationManager;
+	
+	@PostMapping(path = "/login")
+	public ResponseEntity<String> login(@RequestBody LoginRequest req, HttpServletResponse response)
+	{
+		String id = req.getId();
+		String password = req.getPassword();
+		Authentication authentication = new UsernamePasswordAuthenticationToken(id, password);
+		Authentication authenticationResponse = authenticationManager.authenticate(authentication);
+		if(authenticationResponse != null && authenticationResponse.isAuthenticated() )
+		{
+			String secret = "sdfsdgadaefcde324refwdsvvldsnmipoeasdiosajpgsogesdfcv";
+			SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+			String username = authenticationResponse.getName();
+			String authorities = authenticationResponse.getAuthorities().stream().map(t -> t.getAuthority()).collect(Collectors.joining(","));
+			String jwt = Jwts.builder().issuer("GCheck").subject("jwtToken")
+						  .claim("username", username)
+						  .claim("authorities", authorities)
+						  .issuedAt(new Date()).expiration( new Date((new Date()).getTime() + 3000000))
+						  .signWith(secretKey)
+						  .compact();
+		    ResponseCookie cookie = ResponseCookie.from("jwt_token", jwt)
+		            .httpOnly(true)                 
+		            .sameSite("Strict")            
+		            .path("/")                      
+		            .maxAge(Duration.ofMinutes(50)) 
+		            .build();
+
+		        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+				return ResponseEntity.ok("Success");
+		}
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("False");
+	}
 	
 	@PostMapping("/register/checkDuplicate")
 	public ResponseEntity<Map<String, String>> checkDuplicate(@RequestParam String id)

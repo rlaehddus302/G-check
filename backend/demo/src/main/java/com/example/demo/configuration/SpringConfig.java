@@ -2,6 +2,10 @@ package com.example.demo.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
@@ -20,7 +24,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.example.demo.filter.CustomCsrfFilter;
-import com.example.demo.filter.JWTTokenGenrateFilter;
 import com.example.demo.filter.JWTTokenValidationFilter;
 
 import static org.springframework.security.config.Customizer.withDefaults;
@@ -34,19 +37,18 @@ public class SpringConfig {
 	SecurityFilterChain cutomeSecurityFilterChain(HttpSecurity http) throws Exception 
 	{
 		http.authorizeHttpRequests((requests) -> requests.
-				requestMatchers("/h2-console/**", "/register/**").permitAll()
+				requestMatchers("/h2-console/**", "/register/**", "/login").permitAll()
 				.anyRequest().authenticated());
 		http.headers(headers -> headers.frameOptions().disable());
 		http.sessionManagement(t -> t.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 		http.cors(withDefaults());
 		http.csrf(t -> t.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 						.csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
-						.ignoringRequestMatchers("/h2-console/**", "/loginIn", "/register/**"));
+						.ignoringRequestMatchers("/h2-console/**", "/login", "/register/**"));
 		http.addFilterAfter(new CustomCsrfFilter(), CsrfFilter.class);
-		http.addFilterAfter(new JWTTokenGenrateFilter(), BasicAuthenticationFilter.class);
 		http.addFilterBefore(new JWTTokenValidationFilter(), BasicAuthenticationFilter.class);
 		http.formLogin(t -> t.disable());
-		http.httpBasic(withDefaults());
+		http.httpBasic(t -> t.disable());
 		return http.build();
 	}
 	
@@ -70,4 +72,17 @@ public class SpringConfig {
         return source;
     }
 	
+    @Bean
+    public DaoAuthenticationProvider daoAuthenticationProvider(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) 
+    {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
+        return provider;
+    }
+    
+    @Bean
+    public AuthenticationManager authenticationManager(DaoAuthenticationProvider daoAuthenticationProvider) throws Exception 
+    {
+    	ProviderManager providerManager = new ProviderManager(daoAuthenticationProvider);
+        return providerManager;
+    }
 }

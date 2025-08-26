@@ -9,20 +9,26 @@ export default function Login() {
   async function login(event) 
   {
     event.preventDefault()
-    const credentials = window.btoa(`${id.current.value}:${password.current.value}`); 
+    let data = {
+      "id" : id.current.value,
+      "password" : password.current.value,
+    }
     try {
-      const response = await fetch('http://localhost:8080/loginIn', {
+      const response = await fetch('http://localhost:8080/login', {
         method: 'POST',
         headers: {
-          'Authorization': `Basic ${credentials}`,
           'Content-Type': 'application/json'
         },
-        credentials: 'include'
+        body : JSON.stringify(data),
+        credentials: 'include',
       });
-        data = await response.json()
       if (!response.ok) {
         console.log(response);
         throw new Error('로그인 실패');
+      }
+      else
+      {
+        console.log("성공")
       }
     } catch (error) {
       console.error('에러:', error);
@@ -33,7 +39,7 @@ export default function Login() {
     <>
       <section className='d-flex align-items-center justify-content-center vw-100 vh-100 bg-body-tertiary'>
         <div>
-          <p className='d-flex align-items-center justify-content-center'>
+          <div className='d-flex align-items-center justify-content-center'>
             <div className={`d-flex align-items-center justify-content-center bg-gradient-custom rounded-4 ${classes.gradient} me-2`} style={{width: "4.0rem", height: "4.0rem"}}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" className="bi bi-mortarboard text-white" viewBox="0 0 16 16">
                     <path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3a.5.5 0 0 0 .372 0L14 7.14V13a1 1 0 0 0-1 1v2h3v-2a1 1 0 0 0-1-1V6.739l.686-.275a.5.5 0 0 0 .025-.917zM8 8.46 1.758 5.965 8 3.052l6.242 2.913z"/>
@@ -41,7 +47,7 @@ export default function Login() {
                 </svg>
             </div>
             <span className={classes.title}>G-Check</span>
-          </p>
+          </div>
           <p className={classes.paragraph}>복잡한 졸업관리를 쉽게, G-check</p>
           <form onSubmit={login}>
             <input ref={id} type="text" id='id' className={`border border-secondary-subtle p-3 rounded-3 ${classes.input}`} placeholder="아이디"/>

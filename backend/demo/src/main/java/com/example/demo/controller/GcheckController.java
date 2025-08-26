@@ -15,10 +15,4 @@ public class GcheckController {
 		String body = "testSuccess";
 		return ResponseEntity.ok(body);
 	}
-	
-	@PostMapping(path = "/loginIn")
-	public ResponseEntity<String> login()
-	{
-		return ResponseEntity.ok("Success");
-	}
 }
