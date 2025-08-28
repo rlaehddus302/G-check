@@ -1,11 +1,11 @@
 import { useRef, useState } from 'react'
 import classes from './Login.module.css'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 export default function Login() {
 
   const id = useRef()
   const password = useRef()
-
+  const navigate = useNavigate();
   async function login(event) 
   {
     event.preventDefault()
@@ -28,7 +28,9 @@ export default function Login() {
       }
       else
       {
-        console.log("성공")
+        let data = await response.json();
+        console.log(data)
+        navigate("/")
       }
     } catch (error) {
       console.error('에러:', error);

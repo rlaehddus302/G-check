@@ -21,6 +21,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
@@ -42,6 +43,7 @@ import com.example.demo.database.department.DepartmentRepository;
 import com.example.demo.database.user.Student;
 import com.example.demo.database.user.StudentRepository;
 import com.example.demo.dto.LoginRequest;
+import com.example.demo.dto.UserInfo;
 import com.example.demo.error.DuplicateIdException;
 import com.example.demo.error.IdBlankException;
 import com.example.demo.error.InvalidYearException;
@@ -65,35 +67,43 @@ public class AuthController
 	AuthenticationManager authenticationManager;
 	
 	@PostMapping(path = "/login")
-	public ResponseEntity<String> login(@RequestBody LoginRequest req, HttpServletResponse response)
+	public ResponseEntity<UserInfo> login(@RequestBody LoginRequest req, HttpServletResponse response)
 	{
 		String id = req.getId();
 		String password = req.getPassword();
 		Authentication authentication = new UsernamePasswordAuthenticationToken(id, password);
-		Authentication authenticationResponse = authenticationManager.authenticate(authentication);
-		if(authenticationResponse != null && authenticationResponse.isAuthenticated() )
+		try 
 		{
-			String secret = "sdfsdgadaefcde324refwdsvvldsnmipoeasdiosajpgsogesdfcv";
-			SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
-			String username = authenticationResponse.getName();
-			String authorities = authenticationResponse.getAuthorities().stream().map(t -> t.getAuthority()).collect(Collectors.joining(","));
-			String jwt = Jwts.builder().issuer("GCheck").subject("jwtToken")
-						  .claim("username", username)
-						  .claim("authorities", authorities)
-						  .issuedAt(new Date()).expiration( new Date((new Date()).getTime() + 3000000))
-						  .signWith(secretKey)
-						  .compact();
-		    ResponseCookie cookie = ResponseCookie.from("jwt_token", jwt)
-		            .httpOnly(true)                 
-		            .sameSite("Strict")            
-		            .path("/")                      
-		            .maxAge(Duration.ofMinutes(50)) 
-		            .build();
-
+			Authentication authenticationResponse = authenticationManager.authenticate(authentication);
+			if(authenticationResponse != null && authenticationResponse.isAuthenticated() )
+			{
+				String secret = "sdfsdgadaefcde324refwdsvvldsnmipoeasdiosajpgsogesdfcv";
+				SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+				String username = authenticationResponse.getName();
+				String authorities = authenticationResponse.getAuthorities().stream().map(t -> t.getAuthority()).collect(Collectors.joining(","));
+				String jwt = Jwts.builder().issuer("GCheck").subject("jwtToken")
+							  .claim("username", username)
+							  .claim("authorities", authorities)
+							  .issuedAt(new Date()).expiration( new Date((new Date()).getTime() + 3000000))
+							  .signWith(secretKey)
+							  .compact();
+			    ResponseCookie cookie = ResponseCookie.from("jwt_token", jwt)
+			            .httpOnly(true)                 
+			            .sameSite("Strict")            
+			            .path("/")                      
+			            .maxAge(Duration.ofMinutes(50)) 
+			            .build();
+			    Student user = studentRepository.findByUserID(id).orElse(null);
+			    UserInfo userInfo = new UserInfo(user.getId(), user.getUserID(), user.getName(), user.getAdmissionYear(), user.getMajor());
 		        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
-				return ResponseEntity.ok("Success");
+				return ResponseEntity.status(HttpStatus.OK).body(userInfo);
+			}
+		} 
+		catch (BadCredentialsException e) 
+		{
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 		}
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("False");
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 	}
 	
 	@PostMapping("/register/checkDuplicate")

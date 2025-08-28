@@ -45,6 +45,6 @@ public class JWTTokenValidationFilter extends OncePerRequestFilter {
 	
 	@Override
 	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-		return request.getServletPath().equals("/loginIn");
+		return request.getServletPath().equals("/login");
 	}
 }

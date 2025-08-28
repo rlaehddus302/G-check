@@ -37,14 +37,14 @@ public class SpringConfig {
 	SecurityFilterChain cutomeSecurityFilterChain(HttpSecurity http) throws Exception 
 	{
 		http.authorizeHttpRequests((requests) -> requests.
-				requestMatchers("/h2-console/**", "/register/**", "/login").permitAll()
+				requestMatchers("/h2-console/**", "/register/**", "/login", "/error").permitAll()
 				.anyRequest().authenticated());
 		http.headers(headers -> headers.frameOptions().disable());
 		http.sessionManagement(t -> t.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 		http.cors(withDefaults());
 		http.csrf(t -> t.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 						.csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
-						.ignoringRequestMatchers("/h2-console/**", "/login", "/register/**"));
+						.ignoringRequestMatchers("/h2-console/**", "/login", "/register/**", "/error"));
 		http.addFilterAfter(new CustomCsrfFilter(), CsrfFilter.class);
 		http.addFilterBefore(new JWTTokenValidationFilter(), BasicAuthenticationFilter.class);
 		http.formLogin(t -> t.disable());

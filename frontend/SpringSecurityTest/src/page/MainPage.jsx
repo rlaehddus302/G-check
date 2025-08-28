@@ -5,6 +5,7 @@ import classes from './MainPage.module.css'
 export default function MainPage()
 {
     const navigate = useNavigate()
+    const isAuthentication = useLoaderData();
     function navigationHandler(link)
     {
         navigate("/" + link)
@@ -22,12 +23,23 @@ export default function MainPage()
                     <p className='mt-3 fs-1 fw-bold mb-2'>복잡한 졸업관리를 쉽게, G-Check</p>
                     <p className='text-black-50 fs-5 mb-5'>대학교 졸업 요건부터 학점 관리까지, 모든 것을 한 곳에서 간편하게 관리하세요</p>
                     <div className="d-md-flex align-items-center justify-content-center gap-3 xl">
-                        <div className='mb-3 mb-md-0'>
-                            <button onClick={() => navigationHandler("signUp")} type="button" style={{"--bs-btn-bg": "#AD46FF","--bs-btn-border-color": "#AD46FF","--bs-btn-hover-bg": "#922fe0","--bs-btn-hover-border-color": "#922fe0", "--bs-btn-active-bg" : "#922fe0", "--bs-btn-active-border-color" : "#922fe0"}} className="btn btn-success fw-bolder px-3f">지금 시작하기</button>
-                        </div>
-                        <div>
-                            <button onClick={() => navigationHandler("login")} type="button" style={{"--bs-btn-border-color": "#e5e5e5","--bs-btn-hover-border-color": "#e5e5e5"}} className="btn btn-light fw-bolder px-3">로그인하기</button>
-                        </div>
+                        {
+                            isAuthentication ? 
+                                <>
+                                    <div>
+                                        <button onClick={() => navigationHandler("login")} type="button" style={{"--bs-btn-border-color": "#e5e5e5","--bs-btn-hover-border-color": "#e5e5e5"}} className="btn btn-light fw-bolder px-3">마이페이지</button>
+                                    </div>
+                                </>
+                            : 
+                                <>
+                                    <div className='mb-3 mb-md-0'>
+                                        <button onClick={() => navigationHandler("signUp")} type="button" style={{"--bs-btn-bg": "#AD46FF","--bs-btn-border-color": "#AD46FF","--bs-btn-hover-bg": "#922fe0","--bs-btn-hover-border-color": "#922fe0", "--bs-btn-active-bg" : "#922fe0", "--bs-btn-active-border-color" : "#922fe0"}} className="btn btn-success fw-bolder px-3f">지금 시작하기</button>
+                                    </div>
+                                    <div>
+                                        <button onClick={() => navigationHandler("login")} type="button" style={{"--bs-btn-border-color": "#e5e5e5","--bs-btn-hover-border-color": "#e5e5e5"}} className="btn btn-light fw-bolder px-3">로그인하기</button>
+                                    </div>
+                                </>
+                        }
                     </div>
                 </center>
             </div>
