@@ -1,5 +1,44 @@
 INSERT INTO STUDENT (USERID, PASSWORD, ADMISSION_YEAR, MAJOR, ROLE, NAME) 
 VALUES ('admin', '{noop}pass123', 2022, '전자공학과', 'ROLE_USER', '홍길동' );
 
-INSERT INTO DEPARTMENT (department)
-SELECT * FROM CSVREAD('classpath:major.csv', null, 'charset=UTF-8');
+INSERT INTO DEPARTMENT (DEPARTMENT)
+SELECT * FROM CSVREAD('classpath:department.csv', null, 'charset=UTF-8');
+
+INSERT INTO ACADEMIC_YEAR (ACADEMIC_YEAR, DEPARTMENT_ID)
+SELECT * FROM CSVREAD('classpath:년도별 졸업기준.csv', null, 'charset=UTF-8');
+
+INSERT INTO GRADUATION_REQUIREMENTS (AVERAGE_SCORE, REQUIRE_ENGLISH_COURSE, REQUIRE_MINIMUM_ENGLISH_MAJOR_COURSE, TOEIC, TOTAL_CREDIT, ACADEMIC_YEAR_ID, NUMBER, CONDITION)
+SELECT * FROM CSVREAD('classpath:컴퓨터AI 일반 졸업기준/2025학년도/graduation_requirements.csv', null, 'charset=UTF-8'); 
+
+INSERT INTO MAJOR (TOTAL_CREDIT, GRADUATION_REQUIREMENTS_ID)
+SELECT * FROM CSVREAD('classpath:컴퓨터AI 일반 졸업기준/2025학년도/major.csv', null, 'charset=UTF-8'); 
+
+INSERT INTO GENERAL_EDUCATION (TOTAL_CREDIT, GRADUATION_REQUIREMENTS_ID)
+SELECT * FROM CSVREAD('classpath:컴퓨터AI 일반 졸업기준/2025학년도/GeneralEducation.csv', null, 'charset=UTF-8'); 
+
+INSERT INTO OTHER (GRADUATION_REQUIREMENTS_ID, CONTENT)
+SELECT * FROM CSVREAD('classpath:컴퓨터AI 일반 졸업기준/2025학년도/기타/기타.csv', null, 'charset=UTF-8'); 
+
+INSERT INTO GRADUATION_STANDARD (NUMBER, GENERAL_EDUCATION_ID, MAJOR_ID, PARENT_ID, CATEGORY, REMARKS, CONDITION)
+SELECT * FROM CSVREAD('classpath:컴퓨터AI 일반 졸업기준/2025학년도/전공 세부조건/전공 세부 졸업 요건.csv', null, 'charset=UTF-8');
+
+INSERT INTO COURSE (NAME, CREDIT)
+SELECT * FROM CSVREAD('classpath:컴퓨터AI 일반 졸업기준/2025학년도/전공 세부조건/2025컴퓨터AI학과 전공.csv', null, 'charset=UTF-8');
+
+INSERT INTO STANDARD_COURSE (COURSE_ID, GRADUATION_STANDARD_ID)
+SELECT * FROM CSVREAD('classpath:컴퓨터AI 일반 졸업기준/2025학년도/전공 세부조건/STANDARD_COURSE.csv', null, 'charset=UTF-8');
+
+INSERT INTO GRADUATION_STANDARD (NUMBER, GENERAL_EDUCATION_ID, MAJOR_ID, PARENT_ID, CATEGORY, REMARKS, CONDITION)
+SELECT * FROM CSVREAD('classpath:컴퓨터AI 일반 졸업기준/2025학년도/교양 세부조건/교양 세부 졸업 요건.csv', null, 'charset=UTF-8');
+
+INSERT INTO COURSE (NAME, CREDIT)
+SELECT * FROM CSVREAD('classpath:교양/2025/25년도 MSC.csv', null, 'charset=UTF-8');
+
+INSERT INTO COURSE (NAME, CREDIT)
+SELECT * FROM CSVREAD('classpath:교양/2025/25년도 공통교양.csv', null, 'charset=UTF-8');
+
+INSERT INTO COURSE (NAME, CREDIT)
+SELECT * FROM CSVREAD('classpath:교양/2025/25년도 기본소양.csv', null, 'charset=UTF-8');
+
+INSERT INTO STANDARD_COURSE (COURSE_ID, GRADUATION_STANDARD_ID)
+SELECT * FROM CSVREAD('classpath:컴퓨터AI 일반 졸업기준/2025학년도/교양 세부조건/STANDARD_COURSE.csv', null, 'charset=UTF-8');

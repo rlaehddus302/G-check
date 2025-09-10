@@ -30,6 +30,11 @@ export default function Login() {
       {
         let data = await response.json();
         console.log(data)
+        localStorage.setItem("id", data.id)
+        localStorage.setItem("userID", data.userID)
+        localStorage.setItem("name", data.name)
+        localStorage.setItem("admissionYear", data.admissionYear)
+        localStorage.setItem("major", data.major)
         navigate("/")
       }
     } catch (error) {
