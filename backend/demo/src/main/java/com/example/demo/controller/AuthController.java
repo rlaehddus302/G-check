@@ -106,6 +106,19 @@ public class AuthController
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 	}
 	
+	@PostMapping("/logout")
+	public ResponseEntity<String> logout(HttpServletResponse response)
+	{
+	    ResponseCookie cookie = ResponseCookie.from("jwt_token", "")
+	            .httpOnly(true)                 
+	            .sameSite("Strict")            
+	            .path("/")                      
+	            .maxAge(Duration.ofMinutes(0)) 
+	            .build();
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+		return ResponseEntity.ok("");
+	}
+	
 	@PostMapping("/register/checkDuplicate")
 	public ResponseEntity<Map<String, String>> checkDuplicate(@RequestParam String id)
 	{

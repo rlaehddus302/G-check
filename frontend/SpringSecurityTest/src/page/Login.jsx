@@ -3,6 +3,7 @@ import classes from './Login.module.css'
 import { Link, useNavigate } from 'react-router-dom'
 export default function Login() {
 
+  const [failMessage, setFailMessage] = useState(null)
   const id = useRef()
   const password = useRef()
   const navigate = useNavigate();
@@ -24,6 +25,7 @@ export default function Login() {
       });
       if (!response.ok) {
         console.log(response);
+
         throw new Error('로그인 실패');
       }
       else
@@ -39,6 +41,7 @@ export default function Login() {
       }
     } catch (error) {
       console.error('에러:', error);
+      setFailMessage("아이디(로그인 전화번호, 로그인 전용 아이디) 또는 비밀번호가 잘못 되었습니다. 아이디와 비밀번호를 정확히 입력해 주세요.")
     }
   }
 
@@ -56,9 +59,10 @@ export default function Login() {
             <span className={classes.title}>G-Check</span>
           </div>
           <p className={classes.paragraph}>복잡한 졸업관리를 쉽게, G-check</p>
-          <form onSubmit={login}>
+          <form style={{width:"25em"}} onSubmit={login}>
             <input ref={id} type="text" id='id' className={`border border-secondary-subtle p-3 rounded-3 ${classes.input}`} placeholder="아이디"/>
             <input ref={password} type="password" id='password' className={`border border-secondary-subtle p-3 rounded-3 ${classes.input}`} placeholder='비밀번호' />
+            <p style={{fontSize:"0.8em"}} className='text-danger mb-2'>{failMessage}</p>
             <button className="w-100 btn btn-secondary p-3 fs-4">로그인하기</button>
           </form>
           <div className='d-flex align-items-center justify-content-center mt-3'>

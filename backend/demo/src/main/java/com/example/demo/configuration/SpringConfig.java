@@ -49,6 +49,7 @@ public class SpringConfig {
 		http.addFilterBefore(new JWTTokenValidationFilter(), BasicAuthenticationFilter.class);
 		http.formLogin(t -> t.disable());
 		http.httpBasic(t -> t.disable());
+		http.logout(t -> t.disable());
 		return http.build();
 	}
 	
