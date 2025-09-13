@@ -1,0 +1,17 @@
+.iconBox0{
+    background-color: #f3e8ff;
+}
+.iconBox1{
+    background-color: #dbeafe;
+}
+.iconBox2{
+    background-color: #dcfce7;
+}
+.iconBox3{
+    background-color: #ffedd4;
+}
+
+.box:hover{
+  cursor: pointer;
+  box-shadow: var(--bs-box-shadow-lg) !important;
+}

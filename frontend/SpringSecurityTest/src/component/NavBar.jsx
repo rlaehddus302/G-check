@@ -1,4 +1,4 @@
-import { Outlet, useLoaderData, useNavigate } from "react-router-dom"
+import { Outlet, useLoaderData, useNavigate, useRevalidator } from "react-router-dom"
 import classes from './NavBar.module.css'
 import Cookies from 'js-cookie';
 
@@ -6,6 +6,7 @@ export default function NavBar()
 {
     const navigate = useNavigate()
     let isAuthentication = useLoaderData();
+    const { revalidate, state } = useRevalidator();
     let name
     if(isAuthentication)
     {
@@ -31,12 +32,13 @@ export default function NavBar()
         {
             localStorage.clear();
             navigate("/")
+            revalidate()
         }    
     }
     return(
         <>
             <section className='d-flex flex-column vw-100 vh-100 bg-body-tertiary'>
-                <nav style={{height:"4.0em"}} className="navbar navbar-expand-lg bg-white border-bottom border-dark-subtle py-0">
+                <nav className="navbar navbar-expand-lg bg-white border-bottom border-dark-subtle py-3">
                     <div className="container-fluid h-100 px-2 px-lg-5 px-md-4 px-sm-3">
                         <div className="d-flex align-items-center gap-3">
                             <div className={`d-flex align-items-center justify-content-center bg-gradient-custom rounded-3 ${classes.gradient} `} style={{width: "2.0rem", height: "2.0rem"}}>

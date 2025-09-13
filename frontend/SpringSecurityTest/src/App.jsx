@@ -5,13 +5,16 @@ import SignUp from './page/SignUp'
 import NavBar from './component/NavBar'
 import MainPage from './page/MainPage'
 import {loginCheck} from './util/LoginCheck'
+import MyPage from './page/MyPage'
 
 const router = createBrowserRouter([
   { path:'/', 
     element: <NavBar/>,
+    id: 'nav',
     loader : loginCheck,
     children : [
-      {path:'/', element: <MainPage/>, loader : loginCheck }
+      {index:true, element: <MainPage/>},
+      {path:'myPage', element: <MyPage/>}
     ],
   },
   {path:'login', element: <Login/> },

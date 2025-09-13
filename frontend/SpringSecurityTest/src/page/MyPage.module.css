@@ -1,0 +1,8 @@
+.progress_bar {
+  background: linear-gradient(to right, #a855f7, #facc15); 
+}
+
+.box:hover{
+  cursor: pointer;
+  box-shadow: var(--bs-box-shadow-lg) !important;
+}

@@ -1,11 +1,11 @@
-import { useLoaderData, useNavigate } from 'react-router-dom'
+import { useNavigate, useRouteLoaderData } from 'react-router-dom'
 import classes from './MainPage.module.css'
 
 
 export default function MainPage()
 {
     const navigate = useNavigate()
-    const isAuthentication = useLoaderData();
+    const isAuthentication = useRouteLoaderData("nav");
     function navigationHandler(link)
     {
         navigate("/" + link)
@@ -27,7 +27,7 @@ export default function MainPage()
                             isAuthentication ? 
                                 <>
                                     <div>
-                                        <button type="button" style={{"--bs-btn-border-color": "#e5e5e5","--bs-btn-hover-border-color": "#e5e5e5"}} className="btn btn-light fw-bolder px-3">마이페이지</button>
+                                        <button type="button" onClick={() => navigationHandler("myPage")} style={{"--bs-btn-border-color": "#e5e5e5","--bs-btn-hover-border-color": "#e5e5e5"}} className="btn btn-light fw-bolder px-3">마이페이지</button>
                                     </div>
                                 </>
                             : 
