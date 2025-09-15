@@ -1,6 +1,8 @@
 import classes from './MyPage.module.css'
 import { CARD_BOX } from '../util/CardBoxData'
 import CardBox from '../component/CardBox'
+import { loginCheck } from '../util/LoginCheck'
+import { redirect } from 'react-router-dom'
 
 export default function MyPage()
 {
@@ -45,3 +47,14 @@ export default function MyPage()
     )
 }
 
+export async function loader({request, param}) {
+    let returnValue = await loginCheck()
+    if(returnValue)
+    {
+
+    }
+    else
+    {
+        throw redirect("/login")
+    }
+}

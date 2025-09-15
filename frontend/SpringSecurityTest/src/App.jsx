@@ -6,6 +6,7 @@ import NavBar from './component/NavBar'
 import MainPage from './page/MainPage'
 import {loginCheck} from './util/LoginCheck'
 import MyPage from './page/MyPage'
+import { loader as myPageLoader } from './page/MyPage'
 
 const router = createBrowserRouter([
   { path:'/', 
@@ -14,7 +15,7 @@ const router = createBrowserRouter([
     loader : loginCheck,
     children : [
       {index:true, element: <MainPage/>},
-      {path:'myPage', element: <MyPage/>}
+      {path:'myPage', element: <MyPage/>, loader: myPageLoader}
     ],
   },
   {path:'login', element: <Login/> },
