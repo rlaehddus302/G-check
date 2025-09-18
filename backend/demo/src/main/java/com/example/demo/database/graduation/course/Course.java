@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.example.demo.database.graduation.graduationStandard.GraduationStandard;
 import com.example.demo.database.graduation.standardCourse.StandardCourse;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -27,10 +28,43 @@ public class Course
 	private int credit;
 	
 	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+	@JsonIgnore
     private List<StandardCourse> standardCourses;
 	
 	public Course() 
 	{
 		
-	}	
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getCredit() {
+		return credit;
+	}
+
+	public void setCredit(int credit) {
+		this.credit = credit;
+	}
+
+	public List<StandardCourse> getStandardCourses() {
+		return standardCourses;
+	}
+
+	public void setStandardCourses(List<StandardCourse> standardCourses) {
+		this.standardCourses = standardCourses;
+	}
 }

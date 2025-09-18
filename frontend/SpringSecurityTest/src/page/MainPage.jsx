@@ -11,7 +11,7 @@ export default function MainPage()
         navigate("/" + link)
     }
     return(
-        <div className="flex-grow-1">
+        <div className="flex-grow-1 d-flex justify-content-center align-items-center">
             <div className='d-flex justify-content-center align-items-center h-100'>
                 <center>
                     <div className={`d-flex align-items-center justify-content-center bg-gradient-custom rounded-4 ${classes.gradient} `} style={{width: "4.0rem", height: "4.0rem"}}>

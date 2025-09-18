@@ -19,11 +19,13 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.session.NullAuthenticatedSessionStrategy;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.context.NullSecurityContextRepository;
+import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
+import org.springframework.security.web.session.SessionManagementFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -48,12 +50,13 @@ public class SpringConfig {
 				requestMatchers("/h2-console/**", "/register/**", "/login", "/error").permitAll()
 				.anyRequest().authenticated());
 		http.headers(headers -> headers.frameOptions().disable());
-		http.sessionManagement(t -> t.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+		http.sessionManagement(t -> t.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+									 .sessionAuthenticationStrategy(new NullAuthenticatedSessionStrategy()));
 		http.cors(withDefaults());
 		http.csrf(t -> t.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 						.csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
 						.ignoringRequestMatchers("/h2-console/**", "/login", "/register/**", "/error"));
-		http.addFilterAfter(new CustomCsrfFilter(), CsrfFilter.class);
+		http.addFilterAfter(new CustomCsrfFilter(), SessionManagementFilter.class);
 		http.addFilterBefore(new JWTTokenValidationFilter(), BasicAuthenticationFilter.class);
 		http.formLogin(t -> t.disable());
 		http.httpBasic(t -> t.disable());

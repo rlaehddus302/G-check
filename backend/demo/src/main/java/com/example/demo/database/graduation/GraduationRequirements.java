@@ -5,6 +5,7 @@ import java.util.List;
 import com.example.demo.Enum.Condition;
 import com.example.demo.database.academicYear.AcademicYear;
 import com.example.demo.database.graduation.graduationRequirements.Other;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -38,6 +39,7 @@ public class GraduationRequirements
 	
 	@OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "academicYear_id", nullable = false)
+	@JsonIgnore
 	private AcademicYear academicYear;
 	
 	@Enumerated(EnumType.STRING)
@@ -57,6 +59,102 @@ public class GraduationRequirements
 	public GraduationRequirements() 
 	{
 		
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public int getTotalCredit() {
+		return totalCredit;
+	}
+
+	public void setTotalCredit(int totalCredit) {
+		this.totalCredit = totalCredit;
+	}
+
+	public int getToeic() {
+		return toeic;
+	}
+
+	public void setToeic(int toeic) {
+		this.toeic = toeic;
+	}
+
+	public double getAverageScore() {
+		return averageScore;
+	}
+
+	public void setAverageScore(double averageScore) {
+		this.averageScore = averageScore;
+	}
+
+	public int getRequireEnglishCourse() {
+		return requireEnglishCourse;
+	}
+
+	public void setRequireEnglishCourse(int requireEnglishCourse) {
+		this.requireEnglishCourse = requireEnglishCourse;
+	}
+
+	public int getRequireMinimumEnglishMajorCourse() {
+		return requireMinimumEnglishMajorCourse;
+	}
+
+	public void setRequireMinimumEnglishMajorCourse(int requireMinimumEnglishMajorCourse) {
+		this.requireMinimumEnglishMajorCourse = requireMinimumEnglishMajorCourse;
+	}
+
+	public AcademicYear getAcademicYear() {
+		return academicYear;
+	}
+
+	public void setAcademicYear(AcademicYear academicYear) {
+		this.academicYear = academicYear;
+	}
+
+	public Condition getCondition() {
+		return condition;
+	}
+
+	public void setCondition(Condition condition) {
+		this.condition = condition;
+	}
+
+	public int getNumber() {
+		return number;
+	}
+
+	public void setNumber(int number) {
+		this.number = number;
+	}
+
+	public List<Other> getOthers() {
+		return others;
+	}
+
+	public void setOthers(List<Other> others) {
+		this.others = others;
+	}
+
+	public Major getMajor() {
+		return major;
+	}
+
+	public void setMajor(Major major) {
+		this.major = major;
+	}
+
+	public GeneralEducation getGeneralEducation() {
+		return generalEducation;
+	}
+
+	public void setGeneralEducation(GeneralEducation generalEducation) {
+		this.generalEducation = generalEducation;
 	}
 		
 	

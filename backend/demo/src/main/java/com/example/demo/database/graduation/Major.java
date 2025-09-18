@@ -3,6 +3,7 @@ package com.example.demo.database.graduation;
 import java.util.List;
 
 import com.example.demo.database.graduation.graduationStandard.GraduationStandard;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -28,5 +29,40 @@ public class Major
 	
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "GraduationRequirements_id")
+	@JsonIgnore
 	GraduationRequirements graduationRequirements;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public int getTotalCredit() {
+		return totalCredit;
+	}
+
+	public void setTotalCredit(int totalCredit) {
+		this.totalCredit = totalCredit;
+	}
+
+	public List<GraduationStandard> getGraduationStandards() {
+		return GraduationStandards;
+	}
+
+	public void setGraduationStandards(List<GraduationStandard> graduationStandards) {
+		GraduationStandards = graduationStandards;
+	}
+
+	public GraduationRequirements getGraduationRequirements() {
+		return graduationRequirements;
+	}
+
+	public void setGraduationRequirements(GraduationRequirements graduationRequirements) {
+		this.graduationRequirements = graduationRequirements;
+	}
+	
+	
 }

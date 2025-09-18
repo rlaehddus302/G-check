@@ -1,5 +1,5 @@
 INSERT INTO STUDENT (USERID, PASSWORD, ADMISSION_YEAR, MAJOR, ROLE, NAME) 
-VALUES ('admin', '{noop}pass123', 2022, '컴퓨터·AI학부·일반', 'ROLE_USER', '홍길동' );
+VALUES ('admin', '{noop}pass123', 2025, '컴퓨터·AI학부·일반', 'ROLE_USER', '홍길동' );
 
 INSERT INTO DEPARTMENT (DEPARTMENT)
 SELECT * FROM CSVREAD('classpath:department.csv', null, 'charset=UTF-8');

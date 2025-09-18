@@ -29,7 +29,7 @@ public class AcademicYear
     @JsonIgnore
 	private Department department;
 
-    @OneToOne(mappedBy = "academicYear", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToOne(mappedBy = "academicYear", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private GraduationRequirements graduationRequirements;
     
 	public AcademicYear() 

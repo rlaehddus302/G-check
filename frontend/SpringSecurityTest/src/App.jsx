@@ -7,6 +7,8 @@ import MainPage from './page/MainPage'
 import {loginCheck} from './util/LoginCheck'
 import MyPage from './page/MyPage'
 import { loader as myPageLoader } from './page/MyPage'
+import GraduationRequirementsPage from './page/graduationRequirementsPage'
+import { loader as gradRequirLoader } from './page/graduationRequirementsPage'
 
 const router = createBrowserRouter([
   { path:'/', 
@@ -15,7 +17,8 @@ const router = createBrowserRouter([
     loader : loginCheck,
     children : [
       {index:true, element: <MainPage/>},
-      {path:'myPage', element: <MyPage/>, loader: myPageLoader}
+      {path:'myPage', element: <MyPage/>, loader: myPageLoader},
+      {path:'graduation-requirements', id: 'gradRequir' ,element: <GraduationRequirementsPage/>, loader: gradRequirLoader}
     ],
   },
   {path:'login', element: <Login/> },

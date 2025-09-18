@@ -10,8 +10,8 @@ export default function MyPage()
     let major = localStorage.getItem("major")
     let admissionYear = localStorage.getItem("admissionYear")
     return(
-        <div className="flex-grow-1">
-            <section className="h-100 d-flex align-items-center justify-content-center py-4">
+        <div className="flex-grow-1 d-flex align-items-center justify-content-center">
+            <section className="d-flex align-items-center justify-content-center py-4">
                 <div>
                     <h1 className="fs-3 fw-bold m-0 mb-2">안녕하세요,{name}님!</h1>
                     <p className="text-secondar mb-4">{major}•입학년도: {admissionYear}</p>
@@ -38,7 +38,7 @@ export default function MyPage()
                     </div>
                     <div className='row g-3 row-cols-1 row-cols-md-2 row-cols-lg-4'>
                         {CARD_BOX.map((value, index)=>
-                        <CardBox index={index} svg={value.icon} tilte={value.title} content={value.content}></CardBox>      
+                        <CardBox index={index} svg={value.icon} tilte={value.title} content={value.content} link={value.link}></CardBox>      
                         )}
                     </div>
                 </div>

@@ -37,7 +37,7 @@ export default function NavBar()
     }
     return(
         <>
-            <section className='d-flex flex-column vw-100 vh-100 bg-body-tertiary'>
+            <section className='d-flex flex-column min-vh-100 bg-body-tertiary'>
                 <nav className="navbar navbar-expand-lg bg-white border-bottom border-dark-subtle py-3">
                     <div className="container-fluid h-100 px-2 px-lg-5 px-md-4 px-sm-3">
                         <div className="d-flex align-items-center gap-3">
