@@ -7,8 +7,9 @@ import java.util.Set;
 import com.example.demo.Enum.Condition;
 import com.example.demo.database.graduation.GeneralEducation;
 import com.example.demo.database.graduation.Major;
-import com.example.demo.database.graduation.course.Course;
+import com.example.demo.database.graduation.course.GradCourse;
 import com.example.demo.database.graduation.standardCourse.StandardCourse;
+import com.example.demo.database.user.StudentCourse;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
@@ -63,6 +64,9 @@ public class GraduationStandard
     @JsonIgnore
     private GraduationStandard parent;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "graduationStandard")
+    private StudentCourse studentCourse;
+    
 	public Long getId() {
 		return id;
 	}

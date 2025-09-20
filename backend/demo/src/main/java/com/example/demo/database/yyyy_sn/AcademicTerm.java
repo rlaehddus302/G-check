@@ -1,25 +1,32 @@
 package com.example.demo.database.yyyy_sn;
 
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class AcademicTerm 
 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private Long id;
 	private int academicYear;
-	private int semester;
+	private String semester;
+	
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "academicTerm")
+	private List<Course> courses;
 	
 	public AcademicTerm() 
 	{
 		
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
@@ -35,11 +42,11 @@ public class AcademicTerm
 		this.academicYear = year;
 	}
 
-	public int getSemester() {
+	public String getSemester() {
 		return semester;
 	}
 
-	public void setSemester(int semester) {
+	public void setSemester(String semester) {
 		this.semester = semester;
 	}
 }

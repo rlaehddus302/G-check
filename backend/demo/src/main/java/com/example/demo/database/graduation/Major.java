@@ -25,7 +25,7 @@ public class Major
 	private int totalCredit;
 	
 	@OneToMany(mappedBy = "major", cascade = CascadeType.ALL, orphanRemoval = true)
-	List<GraduationStandard> GraduationStandards;
+	List<GraduationStandard> graduationStandards;
 	
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "GraduationRequirements_id")
@@ -49,11 +49,11 @@ public class Major
 	}
 
 	public List<GraduationStandard> getGraduationStandards() {
-		return GraduationStandards;
+		return graduationStandards;
 	}
 
 	public void setGraduationStandards(List<GraduationStandard> graduationStandards) {
-		GraduationStandards = graduationStandards;
+		this.graduationStandards = graduationStandards;
 	}
 
 	public GraduationRequirements getGraduationRequirements() {

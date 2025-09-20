@@ -17,7 +17,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
 @Entity
-public class Course 
+public class GradCourse 
 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,11 +27,11 @@ public class Course
 	
 	private int credit;
 	
-	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "gradCourse", cascade = CascadeType.ALL)
 	@JsonIgnore
     private List<StandardCourse> standardCourses;
 	
-	public Course() 
+	public GradCourse() 
 	{
 		
 	}

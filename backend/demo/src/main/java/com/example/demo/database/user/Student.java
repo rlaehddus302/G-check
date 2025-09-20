@@ -2,15 +2,18 @@ package com.example.demo.database.user;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -33,6 +36,9 @@ public class Student
 	private int admissionYear;
 	@NotBlank(message = "빈칸 및 공백이 없어야 합니다.")
 	private String major;
+	
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "student")
+	List<StAcademicTerm> StAcademicTerms;
 	
 	public Student() {
     }
@@ -91,5 +97,13 @@ public class Student
 
 	public void setMajor(String major) {
 		this.major = major;
+	}
+
+	public List<StAcademicTerm> getStAcademicTerms() {
+		return StAcademicTerms;
+	}
+
+	public void setStAcademicTerms(List<StAcademicTerm> stAcademicTerms) {
+		StAcademicTerms = stAcademicTerms;
 	}
 }

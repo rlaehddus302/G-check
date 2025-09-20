@@ -1,6 +1,6 @@
 package com.example.demo.database.graduation.standardCourse;
 
-import com.example.demo.database.graduation.course.Course;
+import com.example.demo.database.graduation.course.GradCourse;
 import com.example.demo.database.graduation.graduationStandard.GraduationStandard;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -25,7 +25,7 @@ public class StandardCourse
 
     @ManyToOne(optional=false) 
     @JoinColumn(name="course_id")
-    private Course course;
+    private GradCourse gradCourse;
 
 	public Long getId() {
 		return id;
@@ -43,12 +43,12 @@ public class StandardCourse
 		this.graduationStandard = graduationStandard;
 	}
 
-	public Course getCourse() {
-		return course;
+	public GradCourse getCourse() {
+		return gradCourse;
 	}
 
-	public void setCourse(Course course) {
-		this.course = course;
+	public void setCourse(GradCourse gradCourse) {
+		this.gradCourse = gradCourse;
 	}
     
     
