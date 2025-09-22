@@ -13,7 +13,7 @@ public interface StAcademicTermRepository extends JpaRepository<StAcademicTerm, 
             join fetch Stat.student st
             where Stat.semester = :semester
               and Stat.academicYear = :year
-              and st.id = :id)
+              and st.id = :id
         """)
 	Optional<StAcademicTerm> findByStudentAcademicYearAndSemester(int year, String semester, Long id);
 }

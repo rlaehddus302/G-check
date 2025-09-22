@@ -68,8 +68,8 @@ export default function NavBar()
                                 </>                      
                                 :
                                 <>
-                                    <button onClick={() => navigationHandler("login")} type="button" style={{fontSize: "0.8em", fontWeight: "bold"}} class="btn btn-light p-2">로그인</button>
-                                    <button onClick={() => navigationHandler("signUp")} type="button" style={{"--bs-btn-bg": "#AD46FF","--bs-btn-border-color": "#AD46FF","--bs-btn-hover-bg": "#922fe0","--bs-btn-hover-border-color": "#922fe0", "--bs-btn-active-bg" : "#922fe0", "--bs-btn-active-border-color" : "#922fe0" ,fontSize: "0.8em", fontWeight: "bold", color: "white"}} class="btn p-2">회원가입</button>
+                                    <button onClick={() => navigationHandler("login")} type="button" style={{fontSize: "0.8em", fontWeight: "bold"}} className="btn btn-light p-2">로그인</button>
+                                    <button onClick={() => navigationHandler("signUp")} type="button" style={{"--bs-btn-bg": "#AD46FF","--bs-btn-border-color": "#AD46FF","--bs-btn-hover-bg": "#922fe0","--bs-btn-hover-border-color": "#922fe0", "--bs-btn-active-bg" : "#922fe0", "--bs-btn-active-border-color" : "#922fe0" ,fontSize: "0.8em", fontWeight: "bold", color: "white"}} className="btn p-2">회원가입</button>
                                 </>
                             }
                         </div>

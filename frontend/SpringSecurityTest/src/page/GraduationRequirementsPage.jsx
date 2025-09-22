@@ -15,7 +15,7 @@ export default function GraduationRequirementsPage()
     console.log(data)
     return(
         <div className="flex-grow-1">
-            <section style={{paddingLeft:""}} className="h-100 container py-4 px-xl-5 px-lg-4 px-md-3 px-sm-1">
+            <section className="h-100 container py-5 px-xl-5 px-lg-4 px-md-3 px-sm-1">
                 <div className="d-flex gap-0 column-gap-3 mb-3">
                     <div className="d-flex justify-content-center align-items-center">
                         <div className={`d-flex align-items-center justify-content-center bg-gradient-custom rounded-4 ${classes.gradient}`} style={{width: "3.0rem", height: "3.0rem"}}>

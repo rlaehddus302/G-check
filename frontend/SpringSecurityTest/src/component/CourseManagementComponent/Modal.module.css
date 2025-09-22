@@ -1,0 +1,14 @@
+
+.wrapper :global(.modal-header)
+{
+    align-items: initial;
+    border-bottom : none;
+}
+
+.wrapper :global(.modal-header .btn-close) 
+{
+    margin-top: initial;
+    margin-right: initial;
+    margin-bottom: initial;
+    margin-left: auto;
+}

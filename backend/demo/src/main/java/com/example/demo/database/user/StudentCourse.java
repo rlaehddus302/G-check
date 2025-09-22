@@ -24,6 +24,8 @@ public class StudentCourse
 	
 	private int credit;
 	
+	private double score;
+
 	@Enumerated(EnumType.STRING)
 	private Language language;
 	
@@ -85,5 +87,13 @@ public class StudentCourse
 
 	public void setGraduationStandard(GraduationStandard graduationStandard) {
 		this.graduationStandard = graduationStandard;
+	}
+	
+	public double getScore() {
+		return score;
+	}
+
+	public void setScore(double score) {
+		this.score = score;
 	}
 }

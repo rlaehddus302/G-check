@@ -1,0 +1,18 @@
+
+.wrapper :global(.dropdown-menu) {
+  --bs-dropdown-min-width: 0rem;
+  --bs-dropdown-link-active-color : none;
+  --bs-dropdown-link-active-bg : var(--bs-gray-200);
+  --bs-dropdown-link-hover-bg : var(--bs-gray-200);
+}
+
+.wrapper :global(.btn) {
+ --bs-btn-border-color : var(--bs-gray-300);
+ --bs-btn-active-border-color : var(--bs-gray-300);
+ --bs-btn-hover-border-color: var(--bs-gray-300);
+}
+
+
+.dropdown-menu .dropdown-item.active {
+  background: var(--bs-gray-200);
+}

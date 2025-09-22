@@ -65,7 +65,7 @@ public class GraduationStandard
     private GraduationStandard parent;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "graduationStandard")
-    private StudentCourse studentCourse;
+    private List<StudentCourse> studentCourse;
     
 	public Long getId() {
 		return id;

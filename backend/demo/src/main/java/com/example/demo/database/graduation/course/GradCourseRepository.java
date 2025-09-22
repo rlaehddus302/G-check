@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.example.demo.database.yyyy_sn.Course;
 
-public interface GradCourseRepository extends JpaRepository<GradCourseRepository, Long> 
+public interface GradCourseRepository extends JpaRepository<GradCourse, Long> 
 {
     @Query("""
             select gradCourse

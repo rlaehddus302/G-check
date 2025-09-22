@@ -1,0 +1,15 @@
+
+
+.wrapper :global(.btn-bd-primary) {
+  --bs-btn-font-weight: 600;
+  --bs-btn-color: var(--bs-white);
+  --bs-btn-bg: #AD46FF;
+  --bs-btn-border-color:#AD46FF;
+  --bs-btn-hover-color: var(--bs-white);
+  --bs-btn-hover-bg: color-mix(in oklab, #AD46FF 90%, black);
+  --bs-btn-hover-border-color:color-mix(in oklab, #AD46FF 90%, black);
+  --bs-btn-focus-shadow-rgb: #AD46FF;
+  --bs-btn-active-color: var(--bs-btn-hover-color);
+  --bs-btn-active-bg: color-mix(in oklab, #AD46FF 80%, black);
+  --bs-btn-active-border-color: color-mix(in oklab, #AD46FF 80%, black);
+}
