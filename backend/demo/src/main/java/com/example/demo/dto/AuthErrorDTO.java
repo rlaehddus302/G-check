@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 public class AuthErrorDTO 
 {
+	private Long id;
 	private LocalDate date;
 	private String message;
 	private String field;

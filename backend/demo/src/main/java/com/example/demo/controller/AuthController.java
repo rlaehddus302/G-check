@@ -44,7 +44,7 @@ import com.example.demo.database.user.Student;
 import com.example.demo.database.user.StudentRepository;
 import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.UserInfo;
-import com.example.demo.error.DuplicateIdException;
+import com.example.demo.error.DuplicateException;
 import com.example.demo.error.IdBlankException;
 import com.example.demo.error.InvalidYearException;
 
@@ -129,7 +129,7 @@ public class AuthController
 		Optional<Student> student = studentRepository.findByUserID(id);
 		if(!student.isEmpty())
 		{
-			throw new DuplicateIdException("이미 있는 아이디입니다.");
+			throw new DuplicateException("이미 있는 아이디입니다.");
 		}
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("message", "사용 가능한 아이디입니다.");
@@ -159,7 +159,7 @@ public class AuthController
 		Optional<Student> exist = studentRepository.findByUserID(student.getUserID());
 		if(!exist.isEmpty())
 		{
-			throw new DuplicateIdException("이미 있는 아이디입니다.");
+			throw new DuplicateException("이미 있는 아이디입니다.");
 		}
 		student.setRole("ROLE_USER");
 		String password = student.getPassword();

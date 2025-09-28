@@ -54,7 +54,7 @@ export default function Modal({year, semester, selectedCourseListHandler, infoHa
         setCourseList([])
         setSelectedCourse(value)
     }
-    async function addScore(event)
+    async function addScore()
     {
         console.log("fsdf")
         let languageIndex = modalLanguages.findIndex(element => element === language)

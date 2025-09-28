@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,6 +32,7 @@ import com.example.demo.database.user.StudentCourse;
 import com.example.demo.database.user.StudentCourseRepository;
 import com.example.demo.database.user.StudentRepository;
 import com.example.demo.dto.CourseInfoDTO;
+import com.example.demo.error.DuplicateException;
 
 @RestController
 public class UserController 
@@ -63,6 +65,18 @@ public class UserController
 			student.getStAcademicTerms().add(stAcademicTerm);
 			stAcademicTermRepository.save(stAcademicTerm);
 		}
+		else
+		{
+			List<StudentCourse> studentCourses = stAcademicTerm.getStudentCourses();
+			String courseName = studentCourse.getName();
+			for(StudentCourse element : studentCourses)
+			{
+				if(element.getName().equals(courseName))
+				{
+					throw new DuplicateException("이미 있는 교과목입니다.");
+				}
+			}
+		}
 		int admissionYear = student.getAdmissionYear();
 		String major = student.getMajor();
 		GraduationRequirements graduationRequirements = graduationRequirementsRepository.findOneByDeptAndYear(major, admissionYear).get();
@@ -76,8 +90,8 @@ public class UserController
 				studentCourse.setStAcademicTerm(stAcademicTerm);
 				studentCourse.setGraduationStandard(element);
 				studentCourse.setCategory(element.getCategory());
-				studentCourseRepository.save(studentCourse);
-				CourseInfoDTO infoDto = new CourseInfoDTO(studentCourse.getName(), studentCourse.getCredit(), studentCourse.getScore(),studentCourse.getLanguage(), element.getCategory());
+				StudentCourse saved = studentCourseRepository.save(studentCourse);
+				CourseInfoDTO infoDto = new CourseInfoDTO(saved.getId(),studentCourse.getName(), studentCourse.getCredit(), studentCourse.getScore(),studentCourse.getLanguage(), element.getCategory());
 				return ResponseEntity.status(HttpStatus.CREATED).body(infoDto);
 			}
 		}
@@ -91,15 +105,15 @@ public class UserController
 				studentCourse.setStAcademicTerm(stAcademicTerm);
 				studentCourse.setGraduationStandard(element);
 				studentCourse.setCategory(element.getCategory());
-				studentCourseRepository.save(studentCourse);
-				CourseInfoDTO infoDto = new CourseInfoDTO(studentCourse.getName(), studentCourse.getCredit(), studentCourse.getScore(),studentCourse.getLanguage(), element.getCategory());
+				StudentCourse saved = studentCourseRepository.save(studentCourse);
+				CourseInfoDTO infoDto = new CourseInfoDTO(saved.getId(), studentCourse.getName(), studentCourse.getCredit(), studentCourse.getScore(),studentCourse.getLanguage(), element.getCategory());
 				return ResponseEntity.status(HttpStatus.CREATED).body(infoDto);
 			}
 		}
 		studentCourse.setStAcademicTerm(stAcademicTerm);
 		studentCourse.setCategory("기타");
-		studentCourseRepository.save(studentCourse);
-		CourseInfoDTO infoDto = new CourseInfoDTO(studentCourse.getName(), studentCourse.getCredit(), studentCourse.getScore(),studentCourse.getLanguage(), "기타");
+		StudentCourse saved = studentCourseRepository.save(studentCourse);
+		CourseInfoDTO infoDto = new CourseInfoDTO(saved.getId(), studentCourse.getName(), studentCourse.getCredit(), studentCourse.getScore(),studentCourse.getLanguage(), "기타");
 		return ResponseEntity.status(HttpStatus.CREATED).body(infoDto);
 	}
 	
@@ -119,10 +133,17 @@ public class UserController
 		List<CourseInfoDTO> courseInfoDTOs = new ArrayList<CourseInfoDTO>();
 		for(StudentCourse element : studentCourses)
 		{
-			CourseInfoDTO courseInfoDTO = new CourseInfoDTO(element.getName(), element.getCredit(), element.getScore(), element.getLanguage(), element.getCategory());
+			CourseInfoDTO courseInfoDTO = new CourseInfoDTO(element.getId(), element.getName(), element.getCredit(), element.getScore(), element.getLanguage(), element.getCategory());
 			courseInfoDTOs.add(courseInfoDTO);
 		}
 		return ResponseEntity.ok(courseInfoDTOs);
+	}
+	
+	@DeleteMapping("/user/course")
+	public ResponseEntity<String> deleteCourse(@RequestParam Long courseID)
+	{
+		studentCourseRepository.deleteById(courseID);
+		return ResponseEntity.ok("성공");
 	}
 }
 

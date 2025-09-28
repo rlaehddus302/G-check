@@ -6,6 +6,7 @@ import Modal from "../component/CourseManagementComponent/Modal"
 import { loginCheck } from "../util/LoginCheck"
 import { redirect } from "react-router-dom"
 import { languages, scores } from "../util/ScoreNLanaguage"
+import Cookies from 'js-cookie';
 
 export default function CourseManagementPage()
 {
@@ -37,6 +38,36 @@ export default function CourseManagementPage()
                             "categoryList" : dict
                         })
     }
+    async function deleteCourse(value)
+    {
+        const csrf = Cookies.get("XSRF-TOKEN");    
+        try 
+        {
+            const response = await fetch(`http://localhost:8080/user/course?courseID=${value.id}`, 
+            {
+                method: 'DELETE',
+                headers: {
+                'Content-Type': 'application/json',
+                'X-XSRF-TOKEN' : csrf,
+                },
+                credentials: 'include',
+            });
+            if (!response.ok) 
+            {
+                console.log(response);
+            }
+            else
+            {
+                setSelectedCourseList((prev) => {
+                    let array = prev.filter((element) => element.id != value.id)
+                    handleInfo(array)
+                    return array
+                })                
+            }
+        } catch (error) {
+            console.error('에러:', error);
+        }
+    }
     useEffect(()=>
     {
         async function getCourses()
@@ -61,57 +92,10 @@ export default function CourseManagementPage()
                     console.log(data)
                     setSelectedCourseList(data)
                     handleInfo(data);
-                    if(data.length == 0)
-                    {
-                        content =   <div className="py-4 px-4 border border-secondary-subtle bg-white rounded-4 shadow-sm mb-4">
-                                        <center className="py-4">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" className="bi bi-book text-black text-opacity-50 mb-2" viewBox="0 0 16 16">
-                                                <path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783"/>
-                                            </svg>
-                                            <p className="text-black text-opacity-50 mb-2">{year}년 {semester}에 등록된 과목이 없습니다.</p>
-                                            <small className="text-black text-opacity-25">과목 추가 버튼을 눌러 수강한 과목을 기록해보세요.</small>
-                                        </center>
-                                    </div>
-                    }
-                    else
-                    {
-                        content = data.map((value, index)=>{
-                            let languageIndex = languages.findIndex(element => element.value === value.language)
-                            let scoreIndex = scores.findIndex(element => element.value === value.score)
-                            return(
-                                <div className="py-4 border border-secondary-subtle bg-white rounded-4 shadow-sm mb-4">
-                                    <div className="d-flex justify-content-between p-4">
-                                        <div className="d-grid gap-0 row-gap-2">
-                                            <div className="d-flex gap-0 column-gap-2 align-items-center">
-                                                <div className="fw-bold fs-5">{value.name}</div>
-                                                <div>{value.category}</div>
-                                            </div>
-                                            <div className="d-flex gap-0 column-gap-3 align-items-center">
-                                                <small className="text-secondary">{value.credit}학점</small>
-                                                <small className="text-secondary">{languages[languageIndex].name}</small>
-                                            </div>
-                                        </div>
-                                        <div className="d-flex align-items-center gap-0 column-gap-3">
-                                            <div style={{fontSize:"0.8em"}} className={`score-${scoreIndex} px-3 py-1 rounded-4`}>
-                                                {scores[scoreIndex].name}
-                                            </div>
-                                            <div>
-                                                <button className="btn btn-bd-light d-inline-flex align-items-center p-2">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-trash3 fw-bold text-danger" viewBox="0 0 16 16">
-                                                        <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
-                                                    </svg>
-                                                </button>
-                                            </div>
-                                        </div>  
-                                    </div>                  
-                                </div>
-                            )})
-                    }
                 }
             } catch (error) {
                 console.error('에러:', error);
             }
-            
         }
         getCourses(); 
     },[year,semester])
@@ -233,7 +217,7 @@ export default function CourseManagementPage()
                                         {scores[scoreIndex].name}
                                     </div>
                                     <div>
-                                        <button className="btn btn-bd-light d-inline-flex align-items-center p-2">
+                                        <button onClick={()=>deleteCourse(value)} className="btn btn-bd-light d-inline-flex align-items-center p-2">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-trash3 fw-bold text-danger" viewBox="0 0 16 16">
                                                 <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
                                             </svg>
