@@ -29,6 +29,8 @@ public class StudentCourse
 	@Enumerated(EnumType.STRING)
 	private Language language;
 	
+	private String category;
+	
 	@ManyToOne()
 	@JoinColumn(name = "stAcademicTerm_id")
 	private StAcademicTerm stAcademicTerm;
@@ -39,6 +41,19 @@ public class StudentCourse
 	
 	public StudentCourse() 
 	{
+	}
+
+	public StudentCourse(Long id, String name, int credit, double score, Language language, String category,
+			StAcademicTerm stAcademicTerm, GraduationStandard graduationStandard) 
+	{
+		this.id = id;
+		this.name = name;
+		this.credit = credit;
+		this.score = score;
+		this.language = language;
+		this.category = category;
+		this.stAcademicTerm = stAcademicTerm;
+		this.graduationStandard = graduationStandard;
 	}
 
 	public Long getId() {
@@ -95,5 +110,13 @@ public class StudentCourse
 
 	public void setScore(double score) {
 		this.score = score;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
 	}
 }

@@ -1,4 +1,4 @@
-
+ 
 
 .wrapper :global(.btn-bd-primary) {
   --bs-btn-font-weight: 600;
@@ -12,4 +12,88 @@
   --bs-btn-active-color: var(--bs-btn-hover-color);
   --bs-btn-active-bg: color-mix(in oklab, #AD46FF 80%, black);
   --bs-btn-active-border-color: color-mix(in oklab, #AD46FF 80%, black);
+}
+
+.wrapper :global(.btn-bd-light) {
+  --bs-btn-font-weight: 600;
+  --bs-btn-color: var(--bs-dark);
+  --bs-btn-bg: var(--bs-white);;
+  --bs-btn-border-color:var(--bs-gray-300);
+  --bs-btn-hover-color: var(--bs-dark);
+  --bs-btn-hover-bg: color-mix(in oklab, var(--bs-white) 90%, black);
+  --bs-btn-hover-border-color:color-mix(in oklab, var(--bs-white) 90%, black);
+  --bs-btn-focus-shadow-rgb: var(--bs-white);
+  --bs-btn-active-color: var(--bs-btn-hover-color);
+  --bs-btn-active-bg: color-mix(in oklab, var(--bs-white) 80%, black);
+  --bs-btn-active-border-color: color-mix(in oklab,var(--bs-white) 80%, black);
+}
+
+.wrapper :global(.score-0) {
+  background-color: #dcfce7;
+  color: #016630;
+}
+
+.wrapper :global(.score-1) {
+  background-color: #dcfce7;
+  color: #016630;
+}
+
+.wrapper :global(.score-2) {
+  background-color: #dbeafe;
+  color: #193cb8;
+}
+
+.wrapper :global(.score-3) {
+  background-color: #dbeafe;
+  color: #193cb8;
+}
+
+.wrapper :global(.score-4) {
+  background-color: #fef9c2;;
+  color: #894b00;
+}
+
+.wrapper :global(.score-5) {
+  background-color: #fef9c2;;
+  color: #894b00;
+}
+
+.wrapper :global(.score-6) {
+  background-color: var(--bs-gray-300);
+  color: var(--bs-dark);
+}
+
+.wrapper :global(.score-7) {
+  background-color: var(--bs-gray-300);
+  color: var(--bs-dark);
+}
+
+.wrapper :global(.score-8) {
+  background-color: var(--bs-gray-300);
+  color: var(---bs-dark);
+}
+
+.wrapper :global(.category-0) {
+  background-color: var(--bs-success-bg-subtle);
+  color: var(--bs-success);
+}
+
+.wrapper :global(.category-1) {
+  background-color: var(--bs-primary-bg-subtle);
+  color: var(--bs-primary);
+}
+
+.wrapper :global(.category-2) {
+  background-color: var(--bs-danger-bg-subtle);
+  color: var(--bs-danger);
+}
+
+.wrapper :global(.category-3) {
+  background-color: var(--bs-warning-bg-subtle);
+  color: var(--bs-warning);
+}
+
+.wrapper :global(.category-4) {
+  background-color: var(--bs-info-bg-subtle);
+  color: var(--bs-info);
 }

@@ -42,3 +42,15 @@ SELECT * FROM CSVREAD('classpath:교양/2025/25년도 기본소양.csv', null, '
 
 INSERT INTO STANDARD_COURSE (COURSE_ID, GRADUATION_STANDARD_ID)
 SELECT * FROM CSVREAD('classpath:컴퓨터AI 일반 졸업기준/2025학년도/교양 세부조건/STANDARD_COURSE.csv', null, 'charset=UTF-8');
+
+INSERT INTO ACADEMIC_TERM (ACADEMIC_YEAR, SEMESTER)
+SELECT * FROM CSVREAD('classpath:년도학기.csv', null, 'charset=UTF-8');
+
+INSERT INTO COURSE (NAME, CREDIT, ACADEMIC_TERM_ID)
+SELECT * FROM CSVREAD('classpath:개설강좌/2025/개설강좌 2025-1학기.csv', null, 'charset=UTF-8');
+
+INSERT INTO COURSE (NAME, CREDIT, ACADEMIC_TERM_ID)
+SELECT * FROM CSVREAD('classpath:개설강좌/2025/개설강좌_2025-여름학기.csv', null, 'charset=UTF-8');
+
+INSERT INTO COURSE (NAME, CREDIT, ACADEMIC_TERM_ID)
+SELECT * FROM CSVREAD('classpath:개설강좌/2025/개설강좌 2025-2학기.csv', null, 'charset=UTF-8');

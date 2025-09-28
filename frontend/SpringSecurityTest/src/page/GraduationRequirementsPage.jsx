@@ -6,7 +6,6 @@ import OtherRequirements from "../component/GradRequirPageComponent/OtherRequire
 import GeneralEducation from "../component/GradRequirPageComponent/GeneralEducation"
 import Major from "../component/GradRequirPageComponent/Major"
 
-
 export default function GraduationRequirementsPage()
 {
     let major = localStorage.getItem("major")

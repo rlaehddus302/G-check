@@ -12,3 +12,11 @@
     margin-bottom: initial;
     margin-left: auto;
 }
+
+.courseList{
+    cursor: pointer;
+}
+
+.courseList:hover{
+    background-color: var(--bs-gray-100);
+}

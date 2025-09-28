@@ -10,6 +10,7 @@ import { loader as myPageLoader } from './page/MyPage'
 import GraduationRequirementsPage from './page/graduationRequirementsPage'
 import { loader as gradRequirLoader } from './page/graduationRequirementsPage'
 import CourseManagementPage from './page/CourseManagementPage'
+import { loader as courseManageLoader } from './page/CourseManagementPage'
 
 const router = createBrowserRouter([
   { path:'/', 
@@ -20,7 +21,7 @@ const router = createBrowserRouter([
       {index:true, element: <MainPage/>},
       {path:'myPage', element: <MyPage/>, loader: myPageLoader},
       {path:'graduation-requirements', id: 'gradRequir', element: <GraduationRequirementsPage/>, loader: gradRequirLoader},
-      {path:'course-management', element: <CourseManagementPage/>,},
+      {path:'course-management', element: <CourseManagementPage/>, loader: courseManageLoader},
     ],
   },
   {path:'login', element: <Login/> },

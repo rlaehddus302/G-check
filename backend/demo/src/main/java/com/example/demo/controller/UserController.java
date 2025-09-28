@@ -6,12 +6,15 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.database.graduation.GeneralEducation;
@@ -27,6 +30,7 @@ import com.example.demo.database.user.Student;
 import com.example.demo.database.user.StudentCourse;
 import com.example.demo.database.user.StudentCourseRepository;
 import com.example.demo.database.user.StudentRepository;
+import com.example.demo.dto.CourseInfoDTO;
 
 @RestController
 public class UserController 
@@ -42,8 +46,8 @@ public class UserController
 	@Autowired
 	StudentCourseRepository studentCourseRepository;
 	
-	@PostMapping(path = "/enrollments")
-	public ResponseEntity<String> registerCourse(@RequestBody StudentCourse studentCourse)
+	@PostMapping(path = "/user/enrollments")
+	public ResponseEntity<CourseInfoDTO> registerCourse(@RequestBody StudentCourse studentCourse)
 	{
 		SecurityContext context = SecurityContextHolder.getContext();
 		Authentication authentication = context.getAuthentication();
@@ -71,8 +75,10 @@ public class UserController
 			{
 				studentCourse.setStAcademicTerm(stAcademicTerm);
 				studentCourse.setGraduationStandard(element);
+				studentCourse.setCategory(element.getCategory());
 				studentCourseRepository.save(studentCourse);
-				return ResponseEntity.status(HttpStatus.CREATED).body("success");
+				CourseInfoDTO infoDto = new CourseInfoDTO(studentCourse.getName(), studentCourse.getCredit(), studentCourse.getScore(),studentCourse.getLanguage(), element.getCategory());
+				return ResponseEntity.status(HttpStatus.CREATED).body(infoDto);
 			}
 		}
 		GeneralEducation GeneralEduRequir = graduationRequirements.getGeneralEducation();
@@ -84,12 +90,39 @@ public class UserController
 			{
 				studentCourse.setStAcademicTerm(stAcademicTerm);
 				studentCourse.setGraduationStandard(element);
+				studentCourse.setCategory(element.getCategory());
 				studentCourseRepository.save(studentCourse);
-				return ResponseEntity.status(HttpStatus.CREATED).body("success");
+				CourseInfoDTO infoDto = new CourseInfoDTO(studentCourse.getName(), studentCourse.getCredit(), studentCourse.getScore(),studentCourse.getLanguage(), element.getCategory());
+				return ResponseEntity.status(HttpStatus.CREATED).body(infoDto);
 			}
 		}
 		studentCourse.setStAcademicTerm(stAcademicTerm);
+		studentCourse.setCategory("기타");
 		studentCourseRepository.save(studentCourse);
-		return ResponseEntity.status(HttpStatus.CREATED).body("success");
+		CourseInfoDTO infoDto = new CourseInfoDTO(studentCourse.getName(), studentCourse.getCredit(), studentCourse.getScore(),studentCourse.getLanguage(), "기타");
+		return ResponseEntity.status(HttpStatus.CREATED).body(infoDto);
+	}
+	
+	@GetMapping("/user/courses")
+	public ResponseEntity<List<CourseInfoDTO>> getMyCoursesByYearAndSemester(@RequestParam int year, @RequestParam String semester)
+	{
+		SecurityContext context = SecurityContextHolder.getContext();
+		Authentication authentication = context.getAuthentication();
+		String id = authentication.getName();
+		Student student = studentRepository.findByUserID(id).get();
+		Optional<StAcademicTerm> StAcademicTerm = stAcademicTermRepository.findByStudentAcademicYearAndSemester(year, semester, student.getId());
+		if(StAcademicTerm.isEmpty())
+		{
+			return ResponseEntity.ok(new ArrayList<CourseInfoDTO>());
+		}
+		List<StudentCourse> studentCourses = StAcademicTerm.get().getStudentCourses();
+		List<CourseInfoDTO> courseInfoDTOs = new ArrayList<CourseInfoDTO>();
+		for(StudentCourse element : studentCourses)
+		{
+			CourseInfoDTO courseInfoDTO = new CourseInfoDTO(element.getName(), element.getCredit(), element.getScore(), element.getLanguage(), element.getCategory());
+			courseInfoDTOs.add(courseInfoDTO);
+		}
+		return ResponseEntity.ok(courseInfoDTOs);
 	}
 }
+

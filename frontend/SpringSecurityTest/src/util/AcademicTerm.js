@@ -8,3 +8,4 @@ export const semesters = [
     "2학기",
     "겨울학기",
 ]
+
