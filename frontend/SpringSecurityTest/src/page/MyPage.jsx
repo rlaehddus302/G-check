@@ -2,13 +2,19 @@ import classes from './MyPage.module.css'
 import { CARD_BOX } from '../util/CardBoxData'
 import CardBox from '../component/CardBox'
 import { loginCheck } from '../util/LoginCheck'
-import { redirect } from 'react-router-dom'
+import { redirect, useLoaderData, useNavigate } from 'react-router-dom'
 
 export default function MyPage()
 {
     let name = localStorage.getItem("name")
     let major = localStorage.getItem("major")
     let admissionYear = localStorage.getItem("admissionYear")
+    let progress = useLoaderData()
+    const navigate = useNavigate()
+    function navigationHandler(link)
+    {
+        navigate("/" + link)
+    }
     return(
         <div className="flex-grow-1 d-flex align-items-center justify-content-center">
             <section className="d-flex align-items-center justify-content-center py-4">
@@ -22,18 +28,18 @@ export default function MyPage()
                             </svg>
                             <span className='fw-semibold'>졸업 진행률</span>
                         </div>
-                        <div className='px-4'>
+                        <div onClick={() => navigationHandler("graduation-check")} className='px-4'>
                             <div className='row align-items-center'>
                                 <div className='col'>
                                     <div className="progress" role="progressbar" aria-label="Basic example" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-                                        <div className={`progress-bar ${classes.progress_bar}`} style={{width:"25%"}}></div>
+                                        <div className={`progress-bar ${classes.progress_bar}`} style={{width:`${progress}%`}}></div>
                                     </div>
                                 </div>
                                 <div style={{color:"#AD46FF"}} className='col-auto fs-3 fw-bold'>
-                                    25%
+                                    {progress}%
                                 </div>
                             </div>
-                            <p className='m-0 text-secondary'>졸업까지 75%남았습니다.</p>
+                            <p className='m-0 text-secondary'>졸업까지 {100 - progress}%남았습니다.</p>
                         </div>
                     </div>
                     <div className='row g-3 row-cols-1 row-cols-md-2 row-cols-lg-4'>
@@ -51,7 +57,26 @@ export async function loader({request, param}) {
     let returnValue = await loginCheck()
     if(returnValue)
     {
-
+        try
+        {
+            const response = await fetch("http://localhost:8080/user/totalProgress", {
+                credentials: 'include'
+            });    
+            if(response.ok)
+            {
+                const num = await response.json();
+                console.log(num)           
+                return num
+            }
+            else
+            {
+                return 0;
+            }
+        }
+        catch
+        {
+            return 0;
+        }
     }
     else
     {

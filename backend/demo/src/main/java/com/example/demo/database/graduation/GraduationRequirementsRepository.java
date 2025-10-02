@@ -13,10 +13,10 @@ public interface GraduationRequirementsRepository extends JpaRepository<Graduati
     @Query("""
             select gr
             from GraduationRequirements gr
-            join fetch gr.academicYear ay
-            join fetch ay.department d
-            where d.department = :deptName
-              and ay.academicYear = :year
+            join fetch gr.major major
+            join fetch gr.generalEducation generalEducation
+            where gr.academicYear.department.department = :deptName
+              and gr.academicYear.academicYear = :year
         """)
         Optional<GraduationRequirements> findOneByDeptAndYear(@Param("deptName") String departmentName,@Param("year") int academicYear);
 }

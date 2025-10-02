@@ -1,9 +1,13 @@
 package com.example.demo.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -18,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.Enum.Condition;
 import com.example.demo.database.graduation.GeneralEducation;
 import com.example.demo.database.graduation.GraduationRequirements;
 import com.example.demo.database.graduation.GraduationRequirementsRepository;
@@ -25,6 +30,8 @@ import com.example.demo.database.graduation.Major;
 import com.example.demo.database.graduation.course.GradCourse;
 import com.example.demo.database.graduation.course.GradCourseRepository;
 import com.example.demo.database.graduation.graduationStandard.GraduationStandard;
+import com.example.demo.database.graduation.graduationStandard.GraduationStandardRepository;
+import com.example.demo.database.graduation.standardCourse.StandardCourse;
 import com.example.demo.database.user.StAcademicTerm;
 import com.example.demo.database.user.StAcademicTermRepository;
 import com.example.demo.database.user.Student;
@@ -40,14 +47,18 @@ public class UserController
 	@Autowired
 	private StudentRepository studentRepository;
 	@Autowired
-	StAcademicTermRepository stAcademicTermRepository;
+	private StAcademicTermRepository stAcademicTermRepository;
 	@Autowired
-	GraduationRequirementsRepository graduationRequirementsRepository;
+	private GraduationRequirementsRepository graduationRequirementsRepository;
 	@Autowired
-	GradCourseRepository gradCourseRepository;
+	private GradCourseRepository gradCourseRepository;
 	@Autowired
-	StudentCourseRepository studentCourseRepository;
+	private StudentCourseRepository studentCourseRepository;
+	@Autowired
+	private GraduationStandardRepository graduationStandardRepository;
 	
+    private static final Logger log = LoggerFactory.getLogger(UserController.class);
+
 	@PostMapping(path = "/user/enrollments")
 	public ResponseEntity<CourseInfoDTO> registerCourse(@RequestBody StudentCourse studentCourse)
 	{
@@ -81,7 +92,7 @@ public class UserController
 		String major = student.getMajor();
 		GraduationRequirements graduationRequirements = graduationRequirementsRepository.findOneByDeptAndYear(major, admissionYear).get();
 		Major majorRequir = graduationRequirements.getMajor();
-		List<GraduationStandard> graduationStandards = majorRequir.getGraduationStandards();
+		List<GraduationStandard> graduationStandards = graduationStandardRepository.findBymjaorID(majorRequir.getId());
 		for(GraduationStandard element : graduationStandards)
 		{
 			Optional<GradCourse> gradCourse = gradCourseRepository.findByGradStNCourse(studentCourse.getName(), element.getId());
@@ -92,11 +103,22 @@ public class UserController
 				studentCourse.setCategory(element.getCategory());
 				StudentCourse saved = studentCourseRepository.save(studentCourse);
 				CourseInfoDTO infoDto = new CourseInfoDTO(saved.getId(),studentCourse.getName(), studentCourse.getCredit(), studentCourse.getScore(),studentCourse.getLanguage(), element.getCategory());
+				List<GraduationStandard> children = graduationStandardRepository.findByParentID(element.getId());
+				for(GraduationStandard child : children)
+				{
+					gradCourse = gradCourseRepository.findByGradStNCourse(studentCourse.getName(), child.getId());
+					if(gradCourse.isPresent())
+					{
+						studentCourse.setGraduationStandard(child);
+						studentCourse.setCategory(child.getCategory());
+						studentCourseRepository.save(studentCourse);
+					}
+				}
 				return ResponseEntity.status(HttpStatus.CREATED).body(infoDto);
 			}
 		}
 		GeneralEducation GeneralEduRequir = graduationRequirements.getGeneralEducation();
-		graduationStandards = GeneralEduRequir.getGraduationStandards();
+		graduationStandards = graduationStandardRepository.findByGeneralEducationID(GeneralEduRequir.getId());
 		for(GraduationStandard element : graduationStandards)
 		{
 			Optional<GradCourse> gradCourse = gradCourseRepository.findByGradStNCourse(studentCourse.getName(), element.getId());
@@ -107,6 +129,17 @@ public class UserController
 				studentCourse.setCategory(element.getCategory());
 				StudentCourse saved = studentCourseRepository.save(studentCourse);
 				CourseInfoDTO infoDto = new CourseInfoDTO(saved.getId(), studentCourse.getName(), studentCourse.getCredit(), studentCourse.getScore(),studentCourse.getLanguage(), element.getCategory());
+				List<GraduationStandard> children = graduationStandardRepository.findByParentID(element.getId());
+				for(GraduationStandard child : children)
+				{
+					gradCourse = gradCourseRepository.findByGradStNCourse(studentCourse.getName(), child.getId());
+					if(gradCourse.isPresent())
+					{
+						studentCourse.setGraduationStandard(child);
+						studentCourse.setCategory(child.getCategory());
+						studentCourseRepository.save(studentCourse);
+					}
+				}
 				return ResponseEntity.status(HttpStatus.CREATED).body(infoDto);
 			}
 		}
@@ -144,6 +177,98 @@ public class UserController
 	{
 		studentCourseRepository.deleteById(courseID);
 		return ResponseEntity.ok("성공");
+	}
+	
+	@GetMapping("/user/totalProgress")
+	public ResponseEntity<Integer> getTotalProgress()
+	{
+		SecurityContext context = SecurityContextHolder.getContext();
+		Authentication authentication = context.getAuthentication();
+		String id = authentication.getName();
+		Student student = studentRepository.findByUserID(id).get();
+		String major = student.getMajor();
+		int admissionYear = student.getAdmissionYear();
+		GraduationRequirements graduationRequirements = graduationRequirementsRepository.findOneByDeptAndYear(major, admissionYear).get();
+		int requireTotalCredit = graduationRequirements.getTotalCredit();
+		int selectedTotalCredit = studentCourseRepository.findbyStudentID(student.getId()).stream().reduce(0,(sum, sc) -> sum + sc.getCredit(), Integer::sum);
+		int essentialCredit = 0;
+		Major majorRequir = graduationRequirements.getMajor();
+		List<GraduationStandard> graduationStandards = graduationStandardRepository.findBymjaorID(majorRequir.getId());
+		for(GraduationStandard element : graduationStandards)
+		{
+			List<GraduationStandard> children = graduationStandardRepository.findByParentID(element.getId());
+			for(GraduationStandard child : children)
+			{
+				List<StudentCourse> studentCourses = studentCourseRepository.findbyStudentIdNGradStandId(student.getId(), child.getId());
+				Condition condition = child.getCondition();
+				if(condition == Condition.ALL)
+				{
+					if(child.getStandardCourses().size() > studentCourses.size())
+					{
+						essentialCredit = essentialCredit + (child.getStandardCourses().size() - studentCourses.size()) * 3;
+					}
+				}
+				else if(condition == Condition.K_OF)
+				{
+					if(child.getNumber() > studentCourses.size())
+					{
+						essentialCredit = essentialCredit + (child.getNumber() - studentCourses.size()) * 3;
+					}
+				}
+				else if(condition == Condition.MIN_CREDIT)
+				{
+					int credit = studentCourses.stream().reduce(0,(sum, sc) -> sum + sc.getCredit(), Integer::sum);
+					if(child.getNumber() > credit)
+					{
+						essentialCredit = essentialCredit + (child.getNumber() - credit) * 3;
+					}
+				}
+			}			
+		}
+		GeneralEducation GeneralEduRequir = graduationRequirements.getGeneralEducation();
+		graduationStandards = graduationStandardRepository.findByGeneralEducationID(GeneralEduRequir.getId());
+		for(GraduationStandard element : graduationStandards)
+		{
+			List<GraduationStandard> children = graduationStandardRepository.findByParentID(element.getId());
+			for(GraduationStandard child : children)
+			{
+				List<StudentCourse> studentCourses = studentCourseRepository.findbyStudentIdNGradStandId(student.getId(), child.getId());
+				Condition condition = child.getCondition();
+				if(condition == Condition.ALL)
+				{
+					if(child.getStandardCourses().size() > studentCourses.size())
+					{
+						essentialCredit = essentialCredit + (child.getStandardCourses().size() - studentCourses.size()) * 3;
+					}
+				}
+				else if(condition == Condition.K_OF)
+				{
+					if(child.getNumber() > studentCourses.size())
+					{
+						essentialCredit = essentialCredit + (child.getNumber() - studentCourses.size()) * 3;
+					}
+				}
+				else if(condition == Condition.MIN_CREDIT)
+				{
+					int credit = studentCourses.stream().reduce(0,(sum, sc) -> sum + sc.getCredit(), Integer::sum);
+					if(child.getNumber() > credit)
+					{
+						essentialCredit = essentialCredit + (child.getNumber() - credit) * 3;
+					}
+				}
+			}			
+		}
+		if(requireTotalCredit - selectedTotalCredit > essentialCredit)
+		{
+			int answer = (int)((double)selectedTotalCredit / requireTotalCredit * 100);
+			return ResponseEntity.ok(answer);
+		}
+		else
+		{
+			int answer = requireTotalCredit - essentialCredit;
+			answer = (int)((double)answer / requireTotalCredit * 100);
+			return ResponseEntity.ok(answer);
+		}
 	}
 }
 

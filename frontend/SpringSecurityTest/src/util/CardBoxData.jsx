@@ -16,7 +16,7 @@ export const CARD_BOX = [
                 </svg>,
         title : "수강 과목 관리",
         content : "내가 수강한 과목들을 선택하고 관리하세요",
-        link : ""
+        link : "course-management"
     },
     {
         icon : <svg style={{color:"#00c951"}} xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-file-earmark-arrow-up" viewBox="0 0 16 16">

@@ -37,6 +37,7 @@ public class GraduationStandard
 	@Enumerated(EnumType.STRING)
 	private Condition condition;
 	
+	@Column(nullable = false)
 	private String category;
 	
 	private Integer number;
