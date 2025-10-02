@@ -21,6 +21,7 @@ public interface StudentCourseRepository extends JpaRepository<StudentCourse, Lo
             select studentCourse
             from StudentCourse studentCourse
             where studentCourse.stAcademicTerm.student.id = :studentID
+            and studentCourse.category = :category
         """)
-	List<StudentCourse> findbyStudentID(Long studentID);
+	List<StudentCourse> findbyStudentIDNCategoryName(Long studentID, String category);
 }

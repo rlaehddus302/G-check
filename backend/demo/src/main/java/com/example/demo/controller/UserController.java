@@ -189,13 +189,18 @@ public class UserController
 		String major = student.getMajor();
 		int admissionYear = student.getAdmissionYear();
 		GraduationRequirements graduationRequirements = graduationRequirementsRepository.findOneByDeptAndYear(major, admissionYear).get();
-		int requireTotalCredit = graduationRequirements.getTotalCredit();
-		int selectedTotalCredit = studentCourseRepository.findbyStudentID(student.getId()).stream().reduce(0,(sum, sc) -> sum + sc.getCredit(), Integer::sum);
-		int essentialCredit = 0;
 		Major majorRequir = graduationRequirements.getMajor();
 		List<GraduationStandard> graduationStandards = graduationStandardRepository.findBymjaorID(majorRequir.getId());
+		int restCredit = 0;
 		for(GraduationStandard element : graduationStandards)
 		{
+			int essentialCredit = 0;
+			int slectedCredit = element.getStudentCourse().stream().reduce(0,(sum, sc) -> sum + sc.getCredit(), Integer::sum);
+			int categoryRestCredit = element.getNumber() - slectedCredit;
+			if(categoryRestCredit < 0)
+			{
+				categoryRestCredit = 0;
+			}
 			List<GraduationStandard> children = graduationStandardRepository.findByParentID(element.getId());
 			for(GraduationStandard child : children)
 			{
@@ -223,12 +228,25 @@ public class UserController
 						essentialCredit = essentialCredit + (child.getNumber() - credit) * 3;
 					}
 				}
-			}			
+			}
+			categoryRestCredit = categoryRestCredit + essentialCredit;
+			if(categoryRestCredit > element.getNumber())
+			{
+				categoryRestCredit = element.getNumber();
+			}
+			restCredit = restCredit + categoryRestCredit;
 		}
 		GeneralEducation GeneralEduRequir = graduationRequirements.getGeneralEducation();
 		graduationStandards = graduationStandardRepository.findByGeneralEducationID(GeneralEduRequir.getId());
 		for(GraduationStandard element : graduationStandards)
 		{
+			int essentialCredit = 0;
+			int slectedCredit = element.getStudentCourse().stream().reduce(0,(sum, sc) -> sum + sc.getCredit(), Integer::sum);
+			int categoryRestCredit = element.getNumber() - slectedCredit;
+			if(categoryRestCredit < 0)
+			{
+				categoryRestCredit = 0;
+			}
 			List<GraduationStandard> children = graduationStandardRepository.findByParentID(element.getId());
 			for(GraduationStandard child : children)
 			{
@@ -256,19 +274,31 @@ public class UserController
 						essentialCredit = essentialCredit + (child.getNumber() - credit) * 3;
 					}
 				}
-			}			
+			}
+			categoryRestCredit = categoryRestCredit + essentialCredit;
+			if(categoryRestCredit > element.getNumber())
+			{
+				categoryRestCredit = element.getNumber();
+			}
+			restCredit = restCredit + categoryRestCredit;
 		}
-		if(requireTotalCredit - selectedTotalCredit > essentialCredit)
+		int otherCredit = graduationRequirements.getTotalCredit() - GeneralEduRequir.getTotalCredit() - majorRequir.getTotalCredit();
+		int otherSelectedCredit = studentCourseRepository.findbyStudentIDNCategoryName(student.getId(), "기타").stream().reduce(0,(sum, sc) -> sum + sc.getCredit(), Integer::sum);
+		if(otherSelectedCredit > otherCredit)
 		{
-			int answer = (int)((double)selectedTotalCredit / requireTotalCredit * 100);
-			return ResponseEntity.ok(answer);
+			otherSelectedCredit = otherCredit;
 		}
-		else
-		{
-			int answer = requireTotalCredit - essentialCredit;
-			answer = (int)((double)answer / requireTotalCredit * 100);
-			return ResponseEntity.ok(answer);
-		}
+		log.info(Integer.toString(restCredit));
+		restCredit = restCredit + otherCredit - otherSelectedCredit;
+		int answer = (int)((double)(graduationRequirements.getTotalCredit() - restCredit) / graduationRequirements.getTotalCredit() * 100);
+		return ResponseEntity.ok(answer);
 	}
+	
+	@GetMapping("/user/graduationCheck")
+	public ResponseEntity<String> getGraduationCheck()
+	{
+		
+	}
+
 }
 

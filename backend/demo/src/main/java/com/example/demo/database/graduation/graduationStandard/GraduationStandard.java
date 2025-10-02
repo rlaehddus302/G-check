@@ -147,4 +147,12 @@ public class GraduationStandard
 	public void setParent(GraduationStandard parent) {
 		this.parent = parent;
 	}
+
+	public List<StudentCourse> getStudentCourse() {
+		return studentCourse;
+	}
+
+	public void setStudentCourse(List<StudentCourse> studentCourse) {
+		this.studentCourse = studentCourse;
+	}
 }
