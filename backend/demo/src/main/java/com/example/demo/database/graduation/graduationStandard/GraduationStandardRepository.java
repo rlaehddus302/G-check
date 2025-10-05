@@ -14,7 +14,6 @@ public interface GraduationStandardRepository extends JpaRepository<GraduationSt
     @Query("""
             select gs
             from GraduationStandard gs
-            left join fetch gs.studentCourse studentCourse
             where gs.major.id = :majorID
         """)
         List<GraduationStandard> findBymjaorID(@Param("majorID") Long majorID);
@@ -22,7 +21,6 @@ public interface GraduationStandardRepository extends JpaRepository<GraduationSt
     @Query("""
             select gs
             from GraduationStandard gs
-            left join fetch gs.studentCourse studentCourse
             where gs.generalEducation.id = :generalEducationID
         """)
         List<GraduationStandard> findByGeneralEducationID(@Param("generalEducationID") Long generalEducationID);

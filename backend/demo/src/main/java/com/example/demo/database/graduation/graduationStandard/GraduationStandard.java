@@ -9,6 +9,7 @@ import com.example.demo.database.graduation.GeneralEducation;
 import com.example.demo.database.graduation.Major;
 import com.example.demo.database.graduation.course.GradCourse;
 import com.example.demo.database.graduation.standardCourse.StandardCourse;
+import com.example.demo.database.manyTmany.StudentCourse_GraduationStandard;
 import com.example.demo.database.user.StudentCourse;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -65,8 +66,9 @@ public class GraduationStandard
     @JsonIgnore
     private GraduationStandard parent;
 
+	@JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "graduationStandard")
-    private List<StudentCourse> studentCourse;
+    private List<StudentCourse_GraduationStandard> studentCourse_graduationStandards;
     
 	public Long getId() {
 		return id;
@@ -148,11 +150,12 @@ public class GraduationStandard
 		this.parent = parent;
 	}
 
-	public List<StudentCourse> getStudentCourse() {
-		return studentCourse;
+	public List<StudentCourse_GraduationStandard> getStudentCourse_graduationStandards() {
+		return studentCourse_graduationStandards;
 	}
 
-	public void setStudentCourse(List<StudentCourse> studentCourse) {
-		this.studentCourse = studentCourse;
+	public void setStudentCourse_graduationStandards(
+			List<StudentCourse_GraduationStandard> studentCourse_graduationStandards) {
+		this.studentCourse_graduationStandards = studentCourse_graduationStandards;
 	}
 }

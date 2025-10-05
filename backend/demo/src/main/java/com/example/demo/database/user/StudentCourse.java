@@ -1,8 +1,12 @@
 package com.example.demo.database.user;
 
+import java.util.List;
+
 import com.example.demo.Enum.Language;
 import com.example.demo.database.graduation.graduationStandard.GraduationStandard;
+import com.example.demo.database.manyTmany.StudentCourse_GraduationStandard;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -12,6 +16,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class StudentCourse 
@@ -35,16 +40,15 @@ public class StudentCourse
 	@JoinColumn(name = "stAcademicTerm_id")
 	private StAcademicTerm stAcademicTerm;
 	
-	@ManyToOne()
-	@JoinColumn(name = "graduationStandard_id")
-	private GraduationStandard graduationStandard;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "studentCourse")
+	private List<StudentCourse_GraduationStandard> studentCourse_graduationStandards;
 	
 	public StudentCourse() 
 	{
 	}
-
+	
 	public StudentCourse(Long id, String name, int credit, double score, Language language, String category,
-			StAcademicTerm stAcademicTerm, GraduationStandard graduationStandard) 
+			StAcademicTerm stAcademicTerm, List<StudentCourse_GraduationStandard> studentCourse_graduationStandards) 
 	{
 		this.id = id;
 		this.name = name;
@@ -53,8 +57,10 @@ public class StudentCourse
 		this.language = language;
 		this.category = category;
 		this.stAcademicTerm = stAcademicTerm;
-		this.graduationStandard = graduationStandard;
+		this.studentCourse_graduationStandards = studentCourse_graduationStandards;
 	}
+
+
 
 	public Long getId() {
 		return id;
@@ -95,15 +101,17 @@ public class StudentCourse
 	public void setStAcademicTerm(StAcademicTerm stAcademicTerm) {
 		this.stAcademicTerm = stAcademicTerm;
 	}
-
-	public GraduationStandard getGraduationStandard() {
-		return graduationStandard;
-	}
-
-	public void setGraduationStandard(GraduationStandard graduationStandard) {
-		this.graduationStandard = graduationStandard;
-	}
 	
+	public List<StudentCourse_GraduationStandard> getStudentCourse_graduationStandards() {
+		return studentCourse_graduationStandards;
+	}
+
+
+	public void setStudentCourse_graduationStandards(
+			List<StudentCourse_GraduationStandard> studentCourse_graduationStandards) {
+		this.studentCourse_graduationStandards = studentCourse_graduationStandards;
+	}
+
 	public double getScore() {
 		return score;
 	}

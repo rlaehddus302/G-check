@@ -12,6 +12,8 @@ import { loader as gradRequirLoader } from './page/graduationRequirementsPage'
 import CourseManagementPage from './page/CourseManagementPage'
 import { loader as courseManageLoader } from './page/CourseManagementPage'
 import GraduationCheckPage from './page/GraduationCheckPage'
+import { loader as gradCheckLoader } from './page/GraduationCheckPage'
+
 
 const router = createBrowserRouter([
   { path:'/', 
@@ -23,7 +25,7 @@ const router = createBrowserRouter([
       {path:'myPage', element: <MyPage/>, loader: myPageLoader},
       {path:'graduation-requirements', id: 'gradRequir', element: <GraduationRequirementsPage/>, loader: gradRequirLoader},
       {path:'course-management', element: <CourseManagementPage/>, loader: courseManageLoader},
-      {path:'graduation-check', element: <GraduationCheckPage/>},
+      {path:'graduation-check', element: <GraduationCheckPage/>, loader: gradCheckLoader},
     ],
   },
   {path:'login', element: <Login/> },

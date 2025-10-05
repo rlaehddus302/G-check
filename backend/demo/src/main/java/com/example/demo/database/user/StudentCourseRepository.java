@@ -12,8 +12,9 @@ public interface StudentCourseRepository extends JpaRepository<StudentCourse, Lo
     @Query("""
             select studentCourse
             from StudentCourse studentCourse
+            left join studentCourse.studentCourse_graduationStandards studentCourse_graduationStandards
             where studentCourse.stAcademicTerm.student.id = :studentID
-            and studentCourse.graduationStandard.id = :GradStandID
+            and studentCourse_graduationStandards.graduationStandard.id = :GradStandID
         """)
 	List<StudentCourse> findbyStudentIdNGradStandId(Long studentID, Long GradStandID);
     

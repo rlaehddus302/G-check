@@ -1,8 +1,13 @@
+import { redirect, useLoaderData } from "react-router-dom";
 import SummaryField from "../component/GraduationCheckComponent/SummaryField";
+import { loginCheck } from "../util/LoginCheck";
+import RequirementProgressCard from "../component/GraduationCheckComponent/RequirementProgressCard";
 
 
 export default function GraduationCheckPage()
 {
+  let data = useLoaderData()
+  console.log(data);
   return(
     <div className={`flex-grow-1`}>
       <section className="h-100 container py-5 px-xl-5 px-lg-4 px-md-3 px-sm-1">
@@ -17,7 +22,7 @@ export default function GraduationCheckPage()
               </div>
             </div>
             <div className="d-flex justify-content-center align-items-center">
-                <div className="fw-bolder fs-2"> 졸업 요건</div>
+                <div className="fw-bolder fs-2">졸업 요건 확인</div>
             </div>
           </div>
           <div className="text-secondary">현재 졸업 요건 달성 현황을 확인하고 부족한 부분을 파악해보세요</div> 
@@ -41,15 +46,15 @@ export default function GraduationCheckPage()
         <div className={`d-grid gap-0 row-gap-3 border border-secondary-subtle bg-white rounded-4 shadow-sm py-3 mb-5`}>
             <div className='px-4 mt-2'>
                 <div className='fw-semibold'>전체 진행률</div>
-                <small className="text-secondary">총 120학점 중 117학점 이수 완료</small>
+                <small className="text-secondary">총 {data.totalCredit}학점 중 {data.completedCredits}학점 이수 완료</small>
             </div>
             <div className='px-4'>
                 <div style={{height:"12px"}} className="progress mb-2" role="progressbar" aria-label="Basic example" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-                    <div className={`progress-bar bg-dark`} style={{width:`75%`}}></div>
+                    <div className={`progress-bar bg-dark`} style={{width:`${data.progress}%`}}></div>
                 </div>
                 <div className="d-flex">
-                  <small className='me-auto'>진행률 75%</small>
-                  <small >남은 학점: 3학점</small>
+                  <small className='me-auto'>진행률 {data.progress}%</small>
+                  <small >남은 학점: {data.totalCredit - data.completedCredits}학점</small>
                 </div>
             </div>
             <div className='px-4 d-flex gap-0 column-gap-2 align-items-center'>
@@ -57,10 +62,46 @@ export default function GraduationCheckPage()
                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                 <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
               </svg>
-              <div className="text-warning">졸업까지 3학점이 더 필요합니다</div>
+              <div className="text-warning">졸업까지 {data.totalCredit - data.completedCredits}학점이 더 필요합니다</div>
             </div>
-        </div>    
+        </div>
+        <div className="row row-cols-1 row-cols-lg-2 gy-3">
+            {data.requirementProgress.map((value,index) => 
+            <div className="col">
+              <RequirementProgressCard data={value}></RequirementProgressCard>
+            </div>
+            )}
+        </div>
       </section>
     </div>
   )
+}
+
+export async function loader({request, param}) {
+    let returnValue = await loginCheck()
+    if(returnValue)
+    {
+      try
+      {
+        const response = await fetch("http://localhost:8080/user/graduationCheck", {
+            credentials: 'include'
+        });    
+        if(response.ok)
+        {
+          return response;
+        }
+        else
+        {
+
+        }
+      }
+      catch
+      {
+        return false;
+      }
+    }
+    else
+    {
+        throw redirect("/login")
+    }
 }

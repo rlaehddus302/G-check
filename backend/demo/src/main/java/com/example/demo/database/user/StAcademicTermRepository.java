@@ -20,13 +20,4 @@ public interface StAcademicTermRepository extends JpaRepository<StAcademicTerm, 
               and st.id = :id
         """)
 	Optional<StAcademicTerm> findByStudentAcademicYearAndSemester(int year, String semester, Long id);
-    
-    @Query("""
-            select stat
-            from StAcademicTerm stat
-            join fetch stat.studentCourses courses
-            join fetch courses.graduationStandard graduationStandard 
-            where stat.student.id = :studentID
-        """)
-	List<StAcademicTerm> findByStudentID(Long studentID);
 }
