@@ -22,6 +22,6 @@
 ![Git](https://img.shields.io/badge/git-%23F05032.svg?style=for-the-badge&logo=git&logoColor=white)
 
 ## ERD
-<img width="80%" height="80%" alt="image" src="https://github.com/user-attachments/assets/36b82597-6220-424c-beaf-810e72d71333" />
+<img width="80%" height="80%" alt="image" src="https://github.com/user-attachments/assets/9fda1262-1f35-43bc-b39d-bad8cd0df2b0" />
 
 
